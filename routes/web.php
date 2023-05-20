@@ -17,12 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [UsersController::class, 'welcome']);
 
 Route::get('/elections', [ElectionController::class, 'index']);
-Route::get('/voters', [VoteController::class, 'index']);
+Route::get('/voting', [VoteController::class, 'index']);
 Route::post('/submit-vote', [VoteController::class, 'create']);
 Route::get('adminlogin', function () {
     return view('adminlogin');
@@ -34,7 +32,7 @@ Route::get('login', function () {
 
 Route::post('/loginAction', [UsersController::class, 'login']);
 Route::post('/registerAction', [UsersController::class, 'register']);
-Route::post('/voterslogin', [VoteController::class, 'voterslogin']);
+Route::post('/voterslogin', [UsersController::class, 'voterslogin']);
 Route::get('/logout', [UsersController::class, 'logout']);
 Route::post('/create-election', [ElectionController::class, 'create']);
 

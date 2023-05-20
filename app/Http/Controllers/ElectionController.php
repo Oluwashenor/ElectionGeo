@@ -23,23 +23,12 @@ class ElectionController extends Controller
             'name' => $validatedData['name'],
             'election_date' => $validatedData['election_date'],
         ]);
-        Alert::success('Success', 'Contestant Created');
+        toast('Election Created Successfully!', 'success');
         return redirect('/');
     }
 
     public function index()
     {
-        $response = Http::get('https://api.opencagedata.com/geocode/v1/json?key=7ed3f82e9fcf42f0aebf417009a1d527&q=6.752835749999997,4.886953829999999&no_annotations=1&pretty=1');
-        return $response->json()["results"][0]["components"];
-        // if ($response->ok()) {
-        //     $data = $response->json();
-        //     return $data;
-        //     // do something with the response data
-        // } else {
-        //     $errorMessage = $response->json()['message'];
-        //     return $errorMessage;
-        //     // handle the error
-        // }
         $elections = Election::all();
         return view('elections', compact('elections'));
     }

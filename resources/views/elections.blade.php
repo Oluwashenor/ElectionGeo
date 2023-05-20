@@ -51,10 +51,16 @@ $title = "Elections";
                     <th scope="col">Manage</th>
                 </tr>
             </thead>
+            @php
+            $counter = 0;
+            @endphp
             <tbody>
                 @foreach ($elections as $election)
+                @php
+                $counter++;
+                @endphp
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{$counter}}</th>
                     <td>{{$election->name}}</td>
                     <td>{{$election->election_date}}</td>
                     <td><a href="/manage-election/{{$election->id}}" class="btn btn-primary">Manage</a></td>

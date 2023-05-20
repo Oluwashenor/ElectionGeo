@@ -22,9 +22,14 @@ $title = "Login";
                     <input type="email" class="form-control rounded-left" name="email" placeholder="Email" required>
                 </div>
                 <div class="form-group d-flex">
-                    <input type="number" class="form-control rounded-left" name="phone" placeholder="Phone Number" required>
+                    <input type="string" class="form-control rounded-left" name="name" placeholder="Full Name" required>
                 </div>
-
+                <div class="form-group d-flex">
+                    <input type="hidden" class="form-control rounded-left" id="lat" name="lat" placeholder="Latitude">
+                </div>
+                <div class="form-group d-flex">
+                    <input type="hidden" class="form-control rounded-left" id="lon" name="lon" placeholder="Longitude">
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Proceed To Vote</button>
                 </div>

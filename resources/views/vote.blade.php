@@ -1,6 +1,5 @@
    <!-- Modal -->
-   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-       aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
        <div class="modal-dialog">
            <div class="modal-content">
                <div class="modal-header">
@@ -22,9 +21,8 @@
                        </div>
                        {{csrf_field()}}
                        @foreach($data->contestants as $contestant)
-                       <div class="form-check">
-                           <input required class="form-check-input" type="radio" name="contestant"
-                               value="{{$contestant->id}}" id="contestant">
+                       <div class="form-check" style="padding:5px;">
+                           <input required class="form-check-input" type="radio" name="contestant" value="{{$contestant->id}}" id="contestant">
                            <label class="form-check-label" for="flexRadioDefault1">
                                {{$contestant->name}}
                            </label>

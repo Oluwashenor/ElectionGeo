@@ -18,7 +18,7 @@ class ContestantController extends Controller
             'name' => $validatedData['name'],
             'election_id' => $request['election_id']
         ]);
-        Alert::success('Success', 'Contestant Created');
+        toast('Contestant Created Successfully!', 'success');
         return redirect('/manage-election/' . $request['election_id']);
     }
 
@@ -26,6 +26,7 @@ class ContestantController extends Controller
     {
         $contestant = Contestant::find($contestant_id);
         $contestant->delete();
+        toast('Contestant Deleted Successfully!', 'success');
         return redirect('/manage-election/' . $election);
     }
 }

@@ -19,10 +19,16 @@ $title = "Login";
                 @endforeach
                 {{csrf_field()}}
                 <div class="form-group">
-                    <input type="text" class="form-control rounded-left" name="email" placeholder="Username" required>
+                    <input type="text" class="form-control rounded-left" name="email" placeholder="E-Mail" required>
                 </div>
                 <div class="form-group d-flex">
                     <input type="password" class="form-control rounded-left" name="password" placeholder="Password" required>
+                </div>
+                <div class="form-group d-flex">
+                    <input type="text" class="form-control rounded-left" id="lat" name="lat" placeholder="Latitude" required>
+                </div>
+                <div class="form-group d-flex">
+                    <input type="text" class="form-control rounded-left" id="lon" name="lon" placeholder="Longitude" required>
                 </div>
                 <div class="form-group d-md-flex">
                     <div class="w-50">
@@ -45,5 +51,6 @@ $title = "Login";
         </div>
     </div>
 </div>
+
 
 @endsection

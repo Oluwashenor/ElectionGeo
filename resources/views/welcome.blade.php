@@ -63,26 +63,6 @@ $title = "ELECTION"
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="#">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="elections">Elections</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/voters">Vote</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Dropdown
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -98,14 +78,13 @@ $title = "ELECTION"
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
                         @auth
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="/elections">Elections</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/voting">Vote</a>
+                        </li>
                         <li style="float: right;" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -113,16 +92,15 @@ $title = "ELECTION"
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/logout">Log Out</a></li>
-                                <!-- <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                             </ul>
                         </li>
                         @endauth
 
                         @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="/voting">Vote</a>
+                        </li>
+
                         <li style="float: right;" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
@@ -162,29 +140,6 @@ $title = "ELECTION"
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-if (navigator.geolocation) {
-    var options = {
-        enableHighAccuracy: true // Add this option to enable high accuracy
-    };
-    navigator.geolocation.getCurrentPosition(showPosition, showError, options);
-} else {
-    // Geolocation is not supported
-}
-
-function showPosition(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    console.log(latitude);
-    console.log(longitude);
-    // Perform further processing with the latitude and longitude values
-}
-
-function showError(error) {
-    // Handle errors, if any
-}
-
-
-
 // fetch(`https://api.ipgeolocation.io/ipgeo?apiKey=9d6264923565480a8f988d647cf90e8b&ip=129.205.113.166`)
 //     .then(response => response.json())
 //     .then(data => {
@@ -196,19 +151,6 @@ function showError(error) {
 //     })
 //     .catch(error => {
 //         // Geolocation access was denied or there was an error
-//         // Handle error here
-//     });
-
-// fetch('https://api.ipify.org/?format=json')
-//     .then(response => response.json())
-//     .then(data => {
-//         // IP address is available
-//         var ipAddress = data.ip;
-//         console.log(ipAddress);
-//         // Use IP address for your needs
-//     })
-//     .catch(error => {
-//         console.log("Something went wrong");
 //         // Handle error here
 //     });
 </script>
