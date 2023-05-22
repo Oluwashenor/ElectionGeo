@@ -24,7 +24,7 @@ class ElectionController extends Controller
             'election_date' => $validatedData['election_date'],
         ]);
         toast('Election Created Successfully!', 'success');
-        return redirect('/');
+        return redirect('/elections');
     }
 
     public function index()
@@ -41,6 +41,27 @@ class ElectionController extends Controller
         $blue = rand(0, 255);
         // Return the RGB color code.
         return "rgb($red, $green, $blue)";
+    }
+
+    public function map($election_id)
+    {
+        return view('map', compact('election_id'));
+    }
+
+    public function updateMap(Request $request)
+    {
+        // return $request;
+        $election = Election::find($request['election_id']);
+        if ($election == null) {
+            toast('Invalid Election passed!', 'alert');
+        }
+        $election->top_left_lng = $request['top_left_lng'];
+        $election->top_left_lat = $request['top_left_lat'];
+        $election->bottom_right_lat = $request['bottom_right_lat'];
+        $election->bottom_right_lng = $request['bottom_right_lng'];
+        $election->save();
+        toast('Election Map Saved Successfully!', 'success');
+        return redirect('/elections');
     }
 
     public function manage($id)
@@ -62,6 +83,8 @@ class ElectionController extends Controller
             array_push($vote_result, $vote_info);
         }
         $vote_counts = $allvotes->count();
+        //   dd($vote_result);
+        //dd($contestants);
         return view('manage-election', compact('election_id', 'contestants', 'vote_counts', 'vote_result'));
     }
 }

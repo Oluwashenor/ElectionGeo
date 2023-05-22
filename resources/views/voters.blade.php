@@ -20,6 +20,7 @@ $title = "Voting Module";
                     <th scope="col">Election Name</th>
                     <th scope="col">Election Date</th>
                     <th scope="col">Vote Status</th>
+                    <th scope="col">GIS Status</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -31,21 +32,24 @@ $title = "Voting Module";
                 @foreach ($elections as $election)
                 @php
 
+
+
                 $counter = $counter + 1;
                 $data = $election;
                 $data
                 @endphp
                 <tr>
-
-
                     <th scope="row">{{$counter}}</th>
                     <td>{{$election->name}}</td>
                     <td>{{$election->election_date}}</td>
                     <td>
                         {{$election->voted ? "Voted" : "Unvoted"}}
                     </td>
+                    <td style="{{ $election->valid_gis ? 'color: green' : 'color: red'}}">
+                        {{$election->valid_gis ? "In Range" : "Out of range"}}
+                    </td>
                     <td>
-                        <button type="button" class="btn btn-primary {{$election->voted ? 'disabled' : ''}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$election->id}}">
+                        <button type="button" class="btn btn-primary {{$election->voted ? 'disabled' : ''}} {{$election->valid_gis ? '' : 'disabled'}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$election->id}}">
                             Vote
                         </button>
                         <div class="modal fade" id="staticBackdrop{{$election->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{$election->id}}" aria-hidden="true">
@@ -91,7 +95,19 @@ $title = "Voting Module";
             </tbody>
         </table>
     </div>
-
 </div>
 
 @endsection
+
+<script>
+    console.log("Akoko");
+
+    function isPointWithinRectangle(latitude, longitude, topLeftLat, topLeftLng, bottomRightLat, bottomRightLng) {
+        return (
+            latitude >= bottomRightLat &&
+            latitude <= topLeftLat &&
+            longitude >= topLeftLng &&
+            longitude <= bottomRightLng
+        );
+    }
+</script>

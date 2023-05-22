@@ -11,25 +11,6 @@
     <style>
         #map {
             height: 680px;
-            max-height: 70vh;
-            margin: 3% auto;
-            margin-bottom: 1%;
-            max-width: 80%;
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0;
-        }
-
-        .left-span {
-            order: 1;
-            /* Controls the order of appearance, in this case, left comes first */
-        }
-
-        .right-span {
-            order: 2;
         }
     </style>
 </head>
@@ -37,32 +18,6 @@
 <body>
 
     <div id="map"></div>
-
-    <div style="margin:0 auto;max-width:60%;">
-        <div style="text-align: center;">Cordinates Values</div>
-        <div class="row">
-            <span class="left-span" id="top-left-lat">0</span>
-            <span class="right-span" id="top-left-lng">0</span>
-        </div>
-        <div class="row">
-            <span class="left-span" id="bottom-right-lat">0</span>
-            <span class="right-span" id="bottom-right-lng">0</span>
-        </div>
-
-        <form method="post" action="/update-map">
-            {{csrf_field()}}
-            <input type="text" name="top_left_lat" id="top-left-lat-input" />
-            <input type="text" name="top_left_lng" id="top-left-lng-input" />
-            <input type="text" name="bottom_right_lat" id="bottom-right-lat-input" />
-            <input type="text" name="bottom_right_lng" id="bottom-right-lng-input" />
-            <input type="text" name="election_id" value="{{$election_id}}" id="election_id" />
-
-
-            <div style="text-align: center;">
-                <button style="width:auto;height:40px;" type="submit" class="btn btn-primary">Update Cordinates</button>
-            </div>
-        </form>
-    </div>
 
 </body>
 
@@ -84,9 +39,44 @@
     // Create a marker layer group
     var markerGroup = L.layerGroup().addTo(map);
 
+    // var marker = L.marker([6.7519, 4.8780]).addTo(map);
+    // var circle = L.circle([6.7519, 4.8780], {
+    //     color: 'red',
+    //     fillColor: '#f03',
+    //     fillOpacity: 0.5,
+    //     radius: 500
+    // }).addTo(map);
+
     var rectangle = null;
     var rectangleBounds = null;
     var drawn = false;
+
+    // Event listener for click on the map
+    // Event listener for click on the map
+    // map.on('click', function(event) {
+    //     // If a marker already exists, remove it from the map
+    //     if (marker) {
+    //         marker.remove();
+    //     }
+
+    //     // Get the clicked coordinates
+    //     var lat = event.latlng.lat;
+    //     var lng = event.latlng.lng;
+
+    //     // Create a marker at the clicked location and make it draggable
+    //     marker = L.marker([lat, lng], {
+    //         draggable: true
+    //     }).addTo(map);
+
+    //     // Event listener for marker dragend
+    //     marker.on('dragend', function(event) {
+    //         var markerLatLng = event.target.getLatLng();
+    //         console.log('Marker dragged to:', markerLatLng);
+
+    //         // You can perform additional actions with the dragged coordinates here
+    //     });
+    // });
+
 
     // Event listener for click on the map
     map.on('click', function(event) {
@@ -104,6 +94,27 @@
         rectangle = L.rectangle(rectangleBounds, {
             draggable: true
         }).addTo(map);
+
+        // Event listener for rectangle dragend
+        // rectangle.on('dragend', function(event) {
+        //     var rectangleBounds = event.target.getBounds();
+        //     // console.log('Rectangle bounds:', rectangleBounds);
+
+        //     // var topLeft = rectangleBounds.getNorthWest();
+        //     // var bottomRight = rectangleBounds.getSouthEast();
+        //     // var coordinates = {
+        //     //     topLeft: {
+        //     //         lat: topLeft.lat,
+        //     //         lng: topLeft.lng
+        //     //     },
+        //     //     bottomRight: {
+        //     //         lat: bottomRight.lat,
+        //     //         lng: bottomRight.lng
+        //     //     }
+        //     // };
+        //     // console.log('Rectangle coordinates:', coordinates);
+        //     // You can perform additional actions with the rectangle bounds here
+        // });
 
         // Event listener for mousemove on the map
         map.on('mousemove', function(event) {
@@ -134,17 +145,6 @@
                 }
             };
             console.log('Rectangle coordinates:', coordinates);
-            document.getElementById("bottom-right-lat").innerHTML = "Bottom Right Latitude :" + coordinates
-                .bottomRight.lat
-            document.getElementById("bottom-right-lng").innerHTML = " Bottom Right Longitude :" + coordinates
-                .bottomRight.lng;
-            document.getElementById("top-left-lat").innerHTML = "Top Left Latitude :" + coordinates.topLeft.lat
-            document.getElementById("top-left-lng").innerHTML = "Top left Longitude :" + coordinates.topLeft.lng;
-
-            document.getElementById("bottom-right-lat-input").value = coordinates.bottomRight.lat
-            document.getElementById("bottom-right-lng-input").value = coordinates.bottomRight.lng;
-            document.getElementById("top-left-lat-input").value = coordinates.topLeft.lat
-            document.getElementById("top-left-lng-input").value = coordinates.topLeft.lng;
 
             // You can perform additional actions with the rectangle coordinates here
         }

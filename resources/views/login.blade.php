@@ -30,6 +30,9 @@ $title = "Login";
                 <div class="form-group d-flex">
                     <input type="hidden" class="form-control rounded-left" id="lon" name="lon" placeholder="Longitude">
                 </div>
+                <div style="align: center;" class="w-50">
+                    <a href="/adminlogin">Admin Login</a>
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Proceed To Vote</button>
                 </div>

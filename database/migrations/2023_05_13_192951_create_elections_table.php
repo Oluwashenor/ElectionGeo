@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('elections', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
+            $table->string('top_left_lat')->nullable();
+            $table->string('top_left_lng')->nullable();
+            $table->string('bottom_right_lat')->nullable();
+            $table->string('bottom_right_lng')->nullable();
             $table->date('election_date');
             $table->timestamps();
         });

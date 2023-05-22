@@ -22,7 +22,7 @@ Route::get('/', [UsersController::class, 'welcome']);
 Route::get('/elections', [ElectionController::class, 'index']);
 Route::get('/voting', [VoteController::class, 'index']);
 Route::post('/submit-vote', [VoteController::class, 'create']);
-Route::get('adminlogin', function () {
+Route::get('/adminlogin', function () {
     return view('adminlogin');
 });
 
@@ -35,9 +35,13 @@ Route::post('/registerAction', [UsersController::class, 'register']);
 Route::post('/voterslogin', [UsersController::class, 'voterslogin']);
 Route::get('/logout', [UsersController::class, 'logout']);
 Route::post('/create-election', [ElectionController::class, 'create']);
+Route::get('/map/{election_id}', [ElectionController::class, 'map']);
+Route::post('/update-map', [ElectionController::class, 'updateMap']);
+
 
 
 Route::post('/create-contestant', [ContestantController::class, 'create']);
+Route::post('/edit-contestant', [ContestantController::class, 'edit']);
 Route::get('/delete-contestant/{contestant_id}/{election_id}', [ContestantController::class, 'delete']);
 Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
 

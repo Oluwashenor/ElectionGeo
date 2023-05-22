@@ -22,6 +22,22 @@ class ContestantController extends Controller
         return redirect('/manage-election/' . $request['election_id']);
     }
 
+    public function edit(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => ['required', 'string'],
+            'contestant_id' => ['required'],
+        ]);
+        $contestant = Contestant::find($request['contestant_id']);
+        if ($contestant == null) {
+            toast('Invalid Contestant passed!', 'error');
+        }
+        $contestant->name = $request['name'];
+        $contestant->save();
+        toast('Contestant Updated Succesfully!', 'success');
+        return redirect('/manage-election/' . $request['election_id']);
+    }
+
     public function delete($contestant_id, $election)
     {
         $contestant = Contestant::find($contestant_id);

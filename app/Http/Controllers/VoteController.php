@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Election;
 use App\Models\Vote;
+use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,15 +26,24 @@ class VoteController extends Controller
             return redirect("/login");
         }
         //fetching all elections along side there contestants already declared in thier models
+        $user = User::where('email', $email)->with('info')->first();
         $allElections = Election::with('contestants')->get();
         $elections =  $allElections->where('contestants', '!=', '[]');
+        foreach ($elections as $ele) {
+            $can_vote = $this->validCoordinates($user->info->lat, $user->info->lon, $ele->top_left_lat, $ele->top_left_lng, $ele->bottom_right_lat, $ele->bottom_right_lng);
+            if ($can_vote) {
+                $ele['valid_gis'] = true;
+            } else {
+                $ele['valid_gis'] = false;
+            }
+        }
         $users_votes = Vote::where('email', $email)->get();
         if ($users_votes->isEmpty()) {
             if ($elections->isEmpty()) {
                 toast('There are currently no ongoing Elections', 'info');
-                return view('voters', compact('elections'));
+                return view('voters', compact('elections',  'user'));
             } else {
-                return view('voters', compact('elections'));
+                return view('voters', compact('elections', 'user'));
             }
         } else {
             $users_votes_id = array_column($users_votes->toArray(), 'election_id');
@@ -42,7 +52,7 @@ class VoteController extends Controller
                     $election['voted'] = true;
                 }
             }
-            return view('voters', compact('elections'));
+            return view('voters', compact('elections', 'user'));
         }
     }
 
@@ -78,5 +88,14 @@ class VoteController extends Controller
 
     public function getVoterSession(Request $request)
     {
+    }
+
+    public function validCoordinates($latitude, $longitude, $topLeftLat, $topLeftLng, $bottomRightLat, $bottomRightLng)
+    {
+        return ($latitude >= $bottomRightLat &&
+            $latitude <= $topLeftLat &&
+            $longitude >= $topLeftLng &&
+            $longitude <= $bottomRightLng
+        );
     }
 }
