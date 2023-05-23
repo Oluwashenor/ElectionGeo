@@ -5,45 +5,33 @@ use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ContestantController;
 use Illuminate\Support\Facades\Route;
-
 /*
-|--------------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+|------------
+| Here is where you can register web routes for your application.
 */
 
 Route::get('/', [UsersController::class, 'welcome']);
 
+Route::post('/create-election', [ElectionController::class, 'create']);
+Route::get('/map/{election_id}', [ElectionController::class, 'map']);
+Route::post('/update-map', [ElectionController::class, 'updateMap']);
 Route::get('/elections', [ElectionController::class, 'index']);
+Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
+
 Route::get('/voting', [VoteController::class, 'index']);
 Route::post('/submit-vote', [VoteController::class, 'create']);
-Route::get('/adminlogin', function () {
-    return view('adminlogin');
-});
-
-Route::get('login', function () {
-    return view('login');
-});
 
 Route::post('/loginAction', [UsersController::class, 'login']);
 Route::post('/registerAction', [UsersController::class, 'register']);
 Route::post('/voterslogin', [UsersController::class, 'voterslogin']);
 Route::get('/logout', [UsersController::class, 'logout']);
-Route::post('/create-election', [ElectionController::class, 'create']);
-Route::get('/map/{election_id}', [ElectionController::class, 'map']);
-Route::post('/update-map', [ElectionController::class, 'updateMap']);
-
-
+Route::get('/profile/{email}', [UsersController::class, 'profile']);
+Route::post('/updateProfile', [UsersController::class, 'updateProfile']);
 
 Route::post('/create-contestant', [ContestantController::class, 'create']);
 Route::post('/edit-contestant', [ContestantController::class, 'edit']);
 Route::get('/delete-contestant/{contestant_id}/{election_id}', [ContestantController::class, 'delete']);
-Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
 
 Route::get('register', function () {
     return view('register');
@@ -51,4 +39,12 @@ Route::get('register', function () {
 
 Route::get('map', function () {
     return view('map');
+});
+
+Route::get('/adminlogin', function () {
+    return view('adminlogin');
+});
+
+Route::get('login', function () {
+    return view('login');
 });

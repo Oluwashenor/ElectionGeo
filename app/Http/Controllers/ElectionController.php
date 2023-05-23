@@ -50,7 +50,7 @@ class ElectionController extends Controller
 
     public function updateMap(Request $request)
     {
-        // return $request;
+        return $request;
         $election = Election::find($request['election_id']);
         if ($election == null) {
             toast('Invalid Election passed!', 'alert');

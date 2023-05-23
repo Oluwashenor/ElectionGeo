@@ -41,7 +41,7 @@ class UsersController extends Controller
     // Register
     public function register(Request $request)
     {
-
+        $role = 'user';
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -53,10 +53,15 @@ class UsersController extends Controller
         }
         $address = $this->getAddress($request['lat'], $request['lon']);
         $address_components = $address['results'][0]["components"];
+        $emails_for_admins = array("adeshiname@gmail.com");
+        if (in_array($validatedData['email'], $emails_for_admins)) {
+            $role = 'admin';
+        }
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
+            'password' => Hash::make($validatedData['password'] ?? ""),
+            'role' => $role
         ]);
         $info = UserInfo::create([
             'user_id' => $user->id,
@@ -132,5 +137,29 @@ class UsersController extends Controller
     {
         $request->session()->put('email', $request['email']);
         $request->session()->put('name', $request['name']);
+    }
+
+    public function profile($email)
+    {
+        $user = User::where('email', $email)->with('info')->get()[0];
+        if ($user->count() == 0) {
+            toast('User Not Found', 'alert');
+            return redirect('/voting');
+        }
+        return view('profile', compact('user'));
+    }
+
+
+    public function updateProfile(Request $request)
+    {
+        $user = User::where('email', $request['email'])->get()[0];
+        if ($user == null) {
+            toast('User Not Found', 'alert');
+            return redirect('/voting');
+        }
+        $user->name = $request['name'];
+        $user->save();
+        toast('User Info Updated Successfully', 'success');
+        return redirect('/profile/' . $request['email']);
     }
 }

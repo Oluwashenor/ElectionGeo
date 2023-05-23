@@ -24,12 +24,6 @@ $title = "Login";
                 <div class="form-group d-flex">
                     <input type="password" class="form-control rounded-left" name="password" placeholder="Password" required>
                 </div>
-                <div class="form-group d-flex">
-                    <input type="text" class="form-control rounded-left" id="lat" name="lat" placeholder="Latitude" required>
-                </div>
-                <div class="form-group d-flex">
-                    <input type="text" class="form-control rounded-left" id="lon" name="lon" placeholder="Longitude" required>
-                </div>
                 <div class="form-group d-md-flex">
                     <div class="w-50">
                         <label class="checkbox-wrap checkbox-primary">Remember Me

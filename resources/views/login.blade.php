@@ -12,7 +12,7 @@ $title = "Login";
             <div class="icon d-flex align-items-center justify-content-center">
                 <span class="fa fa-user-o"></span>
             </div>
-            <h3 class="text-center mb-4">Login To Vote</h3>
+            <h3 class="text-center mb-4">Proceed To Vote</h3>
             <form class="login-form" method="POST" action="/voterslogin">
                 @foreach ($errors->all() as $error)
                 <p class="alert alert-danger">{{ $error }}</p>
@@ -34,7 +34,7 @@ $title = "Login";
                     <a href="/adminlogin">Admin Login</a>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Proceed To Vote</button>
+                    <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Proceed</button>
                 </div>
             </form>
         </div>

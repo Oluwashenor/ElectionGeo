@@ -1,4 +1,4 @@
-@extends('welcome')
+@extends('layout')
 
 <?php
 $title = "Voting Module";
