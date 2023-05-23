@@ -50,10 +50,17 @@ class ElectionController extends Controller
 
     public function updateMap(Request $request)
     {
-        return $request;
         $election = Election::find($request['election_id']);
         if ($election == null) {
             toast('Invalid Election passed!', 'alert');
+            return redirect('/elections');
+        }
+        if (
+            $request['top_left_lng'] == null || $request['top_left_lat'] == null || $request['bottom_right_lat'] == null ||
+            $request['bottom_right_lng'] == null
+        ) {
+            toast('Election Coordinates cannot be empty', 'alert');
+            return redirect('/map/' . $request['election_id']);
         }
         $election->top_left_lng = $request['top_left_lng'];
         $election->top_left_lat = $request['top_left_lat'];
@@ -67,6 +74,10 @@ class ElectionController extends Controller
     public function manage($id)
     {
         $election = Election::find($id);
+        if ($election == null) {
+            toast('Invalid Election Passed!', 'alert');
+            return redirect('/');
+        }
         $election_id = $election->id;
         $allvotes = $election->votes;
         $contestants = Contestant::where('election_id', $election_id)->get();
@@ -83,8 +94,43 @@ class ElectionController extends Controller
             array_push($vote_result, $vote_info);
         }
         $vote_counts = $allvotes->count();
-        //   dd($vote_result);
-        //dd($contestants);
         return view('manage-election', compact('election_id', 'contestants', 'vote_counts', 'vote_result'));
+    }
+
+
+    public function result($id)
+    {
+        $election = Election::find($id);
+        if ($election == null) {
+            toast('Invalid Election Passed!', 'alert');
+            return redirect('/');
+        }
+        $election_id = $election->id;
+        $allvotes = $election->votes;
+        $contestants = Contestant::where('election_id', $election_id)->get();
+        $vote_result = [];
+        $vote_counts = $allvotes->count();
+        foreach ($contestants as $contestant) {
+
+            $contestant_voters = $allvotes->where('contestant_id', $contestant->id);
+            $contestant->vote_count = $contestant_voters->count();
+            $contestant->voters = $contestant_voters;
+            $vote_info = new stdClass();
+            $vote_info->contestant_name = $contestant->name;
+            $vote_info->total_vote = $contestant_voters->count();
+            $vote_info->color = $this->random_color();
+            if ($vote_counts != 0) {
+                if ($vote_info->total_vote == 0) {
+                    $vote_info->vote_percentage = 0;
+                } else {
+                    $vote_info->vote_percentage = ($vote_info->total_vote / $vote_counts) * 100;
+                }
+            } else {
+                $vote_info->vote_percentage = 0;
+            }
+            array_push($vote_result, $vote_info);
+        }
+
+        return view('election-result', compact('election', 'election_id', 'contestants', 'vote_counts', 'vote_result'));
     }
 }

@@ -9,9 +9,6 @@ $title = "Voting Module";
 <div class="container content">
     <!-- Button trigger modal -->
 
-
-
-
     <div class="container">
         <table class="table">
             <thead>

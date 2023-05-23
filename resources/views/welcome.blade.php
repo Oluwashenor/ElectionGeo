@@ -7,20 +7,49 @@ $title = "Dashboard";
 @section('content')
 
 <style>
-    .btn {
-        margin: 0 3px;
-    }
+.btn {
+    margin: 0 3px;
+}
 </style>
 
+
+<div class="container" style="margin-top: 15px;border:1px solid red;">
+    <div class="row justify-content-between" style="text-align:center;">
+        <div class="col">
+            <div class="card" style="width: 10rem;">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;">80</h5>
+                    <p class="card-text" style="text-align: center;">Ongoing Elections</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 10rem;">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;">80</h5>
+                    <p class="card-text" style="text-align: center;">Completed Elections</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 10rem;">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;">80</h5>
+                    <p class="card-text" style="text-align: center;">Ongoing Elections</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="row">
         <div class="col-lg-5 content">
-
             <div class="myRow" style="display: flex;
         justify-content: space-between;
         margin: 20px 0;">
-                <span class="left-span" id="top-left-lat"> <button type="button" style="margin-bottom: 25px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="left-span" id="top-left-lat"> <button type="button" style="margin-bottom: 25px;"
+                        class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         Add Contestant
                     </button></span>
 

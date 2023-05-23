@@ -9,6 +9,7 @@ use App\Models\Vote;
 use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 use stdClass;
 
@@ -16,19 +17,17 @@ class VoteController extends Controller
 {
     public function index(Request $request)
     {
-        //Trying to fetch current user's Email either through session or AUTH
-        $email = is_null(auth()->user()) ? null : auth()->user()->email;
-        if (is_null($email)) {
-            $email = is_null($request->session()->get('email')) ? null : $request->session()->get('email');
-        }
+        //Trying to fetch current user's Email using AUTH
+        $email = auth()->user()->email;
         if ($email == null) {
             //If email cant be found from session and Auth method redirect to login
             return redirect("/login");
         }
         //fetching all elections along side there contestants already declared in thier models
         $user = User::where('email', $email)->with('info')->first();
-        $allElections = Election::with('contestants')->get();
-        $elections =  $allElections->where('contestants', '!=', '[]');
+        //fetching all elections happening today
+        $allElectionsToday = Election::where('election_date', Carbon::today()->toDateString())->with('contestants')->get();
+        $elections =  $allElectionsToday->where('contestants', '!=', '[]');
         foreach ($elections as $ele) {
             $can_vote = $this->validCoordinates($user->info->lat, $user->info->lon, $ele->top_left_lat, $ele->top_left_lng, $ele->bottom_right_lat, $ele->bottom_right_lng);
             if ($can_vote) {

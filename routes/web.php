@@ -18,6 +18,7 @@ Route::get('/map/{election_id}', [ElectionController::class, 'map']);
 Route::post('/update-map', [ElectionController::class, 'updateMap']);
 Route::get('/elections', [ElectionController::class, 'index']);
 Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
+Route::get('/election-result/{id}', [ElectionController::class, 'result']);
 
 Route::get('/voting', [VoteController::class, 'index']);
 Route::post('/submit-vote', [VoteController::class, 'create']);
@@ -41,10 +42,6 @@ Route::get('map', function () {
     return view('map');
 });
 
-Route::get('/adminlogin', function () {
-    return view('adminlogin');
-});
-
-Route::get('login', function () {
+Route::get('/login', function () {
     return view('login');
 });

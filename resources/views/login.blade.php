@@ -12,33 +12,39 @@ $title = "Login";
             <div class="icon d-flex align-items-center justify-content-center">
                 <span class="fa fa-user-o"></span>
             </div>
-            <h3 class="text-center mb-4">Proceed To Vote</h3>
-            <form class="login-form" method="POST" action="/voterslogin">
+            <h3 class="text-center mb-4">Have an account?</h3>
+            <form class="login-form" method="POST" action="/loginAction">
                 @foreach ($errors->all() as $error)
                 <p class="alert alert-danger">{{ $error }}</p>
                 @endforeach
                 {{csrf_field()}}
                 <div class="form-group">
-                    <input type="email" class="form-control rounded-left" name="email" placeholder="Email" required>
+                    <input type="text" class="form-control rounded-left" name="email" placeholder="E-Mail" required>
                 </div>
                 <div class="form-group d-flex">
-                    <input type="string" class="form-control rounded-left" name="name" placeholder="Full Name" required>
+                    <input type="password" class="form-control rounded-left" name="password" placeholder="Password" required>
                 </div>
-                <div class="form-group d-flex">
-                    <input type="hidden" class="form-control rounded-left" id="lat" name="lat" placeholder="Latitude">
+                <div class="form-group d-md-flex">
+                    <div class="w-50">
+                        <label class="checkbox-wrap checkbox-primary">Remember Me
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="w-50 text-md-right">
+                        <a href="#">Forgot Password</a>
+                    </div>
                 </div>
-                <div class="form-group d-flex">
-                    <input type="hidden" class="form-control rounded-left" id="lon" name="lon" placeholder="Longitude">
-                </div>
-                <div style="align: center;" class="w-50">
-                    <a href="/adminlogin">Admin Login</a>
+                <div class="w-50 text-md-centre">
+                    <a href="/register">New User ?</a>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Proceed</button>
+                    <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Sign-In</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 @endsection

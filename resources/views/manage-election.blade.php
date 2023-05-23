@@ -107,8 +107,7 @@ $title = "Elections";
 
             </div>
             <div>
-
-
+                {{json_encode($vote_result)}}
 
             </div>
 

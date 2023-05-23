@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\Election;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
@@ -15,7 +16,9 @@ class UsersController extends Controller
     public function welcome()
     {
         if (@auth()->check()) {
-            return view('welcome');
+            $allElections = Election::with('contestants')->get();
+            $elections =  $allElections->where('contestants', '!=', '[]');
+            return view('welcome', compact('elections'));
         }
         return redirect("/login");
     }
