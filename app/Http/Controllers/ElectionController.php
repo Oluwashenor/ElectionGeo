@@ -68,7 +68,7 @@ class ElectionController extends Controller
         $election->bottom_right_lng = $request['bottom_right_lng'];
         $election->save();
         toast('Election Map Saved Successfully!', 'success');
-        return redirect('/elections');
+        return redirect('/manage-election/' . $election->id);
     }
 
     public function manage($id)
@@ -94,8 +94,21 @@ class ElectionController extends Controller
             array_push($vote_result, $vote_info);
         }
         $vote_counts = $allvotes->count();
-        return view('manage-election', compact('election_id', 'contestants', 'vote_counts', 'vote_result'));
+        return view('manage-election', compact('election', 'election_id', 'contestants', 'vote_counts', 'vote_result'));
     }
+
+    public function delete($id)
+    {
+        $election = Election::find($id);
+        if ($election == null) {
+            toast('Invalid Election Passed!', 'alert');
+            return redirect('/');
+        }
+        $election->delete();
+        toast('Election Deleted Successfully!', 'success');
+        return redirect('elections');
+    }
+
 
 
     public function result($id)

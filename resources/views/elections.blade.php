@@ -48,7 +48,7 @@ $title = "Elections";
                     <th scope="col">#</th>
                     <th scope="col">Election Name</th>
                     <th scope="col">Election Date</th>
-                    <th scope="col">Manage</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             @php
@@ -63,7 +63,9 @@ $title = "Elections";
                     <th scope="row">{{$counter}}</th>
                     <td>{{$election->name}}</td>
                     <td>{{$election->election_date}}</td>
-                    <td><a href="/manage-election/{{$election->id}}" class="btn btn-primary">Manage</a></td>
+                    <td>
+                        <a href="/manage-election/{{$election->id}}" style="margin:0 5px;" class="btn btn-primary">Manage</a><a href="/delete-election/{{$election->id}}" class="btn btn-danger">Delete</a>
+                    </td>
 
                 </tr>
                 @endforeach

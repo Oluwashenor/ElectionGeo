@@ -18,6 +18,7 @@ Route::get('/map/{election_id}', [ElectionController::class, 'map']);
 Route::post('/update-map', [ElectionController::class, 'updateMap']);
 Route::get('/elections', [ElectionController::class, 'index']);
 Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
+Route::get('/delete-election/{id}', [ElectionController::class, 'delete']);
 Route::get('/election-result/{id}', [ElectionController::class, 'result']);
 
 Route::get('/voting', [VoteController::class, 'index']);

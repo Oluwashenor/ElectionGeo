@@ -10,6 +10,8 @@ $title = $election->name . "'s " . "Result";
     .btn {
         margin: 0 3px;
     }
+
+    strong {}
 </style>
 
 
@@ -20,10 +22,16 @@ $title = $election->name . "'s " . "Result";
             <div class="myRow" style="display: flex;
         justify-content: space-between;
         margin: 20px 0;">
-                <span class="left-span" id="top-left-lat"> Contestants Summary</span>
+                <span class="left-span" id="top-left-lat">
+                    <p class="lead">
+                        <strong>Election Summary</strong>
+                    </p>
+                </span>
             </div>
 
-
+            <p><strong>Election Date :</strong><small>Today</small></p>
+            <p><strong>Total Votes : </strong><small>2</small></p>
+            <p><strong>Total Contestants : </strong><small>2</small></p>
 
             @foreach($vote_result as $contestant)
             <div class="aspirant" style="margin-bottom: 20px;padding:10px;">

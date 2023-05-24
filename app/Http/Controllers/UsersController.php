@@ -70,8 +70,8 @@ class UsersController extends Controller
             'user_id' => $user->id,
             'lat' => $request['lat'],
             'lon' => $request['lon'],
-            'lga' => $address_components['county'],
-            'state' => $address_components['state'],
+            'lga' => $address_components['county'] ?? $address_components['quarter'],
+            'state' => $address_components['state'] ?? $address_components['region'],
             'town' => $address_components['city'],
             'country' => $address_components['country'],
             'country_code' => $address_components['country_code']
@@ -103,39 +103,6 @@ class UsersController extends Controller
         }
     }
 
-    public function voterslogin(Request $request)
-    {
-
-        $user_exist = User::where('email', $request['email'])->get();
-        if ($user_exist->isEmpty()) {
-
-            if ($request["lat"] == null || $request["lon"] == null) {
-                toast('Please grant location Permission and try again', 'info');
-                return redirect('/login');
-            }
-            $address = $this->getAddress($request['lat'], $request['lon']);
-            $address_components = $address['results'][0]["components"];
-
-            $user = User::create([
-                'name' => $request['name'],
-                'email' => $request['email'],
-                'password' => Hash::make("password"),
-            ]);
-            $info = UserInfo::create([
-                'user_id' => $user->id,
-                'lat' => $request['lat'],
-                'lon' => $request['lon'],
-                'lga' => $address_components['county'] ?? $address_components['quarter'],
-                'state' => $address_components['state'],
-                'town' => $address_components['city'],
-                'country' => $address_components['country'],
-                'country_code' => $address_components['country_code']
-            ]);
-        }
-        $this->saveVoterSession($request);
-        return redirect('/voting');
-    }
-
     public function saveVoterSession(Request $request)
     {
         $request->session()->put('email', $request['email']);
@@ -155,12 +122,42 @@ class UsersController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = User::where('email', $request['email'])->get()[0];
+        $user = User::where('email', $request['email'])->with('info')->get()[0];
+        $updateLocation = false;
+        if (($user->info == null) || ($user->info->lat != $request['lat']) || ($user->info->lon != $request['lon'])) {
+            $updateLocation = true;
+            $address = $this->getAddress($request['lat'], $request['lon']);
+            $address_components = $address['results'][0]["components"];
+        }
         if ($user == null) {
             toast('User Not Found', 'alert');
             return redirect('/voting');
         }
         $user->name = $request['name'];
+        if ($updateLocation) {
+            $info = UserInfo::where('user_id', $user->id)->first();
+            if ($info == null) {
+                UserInfo::create([
+                    'user_id' => $user->id,
+                    'lat' => $request['lat'],
+                    'lon' => $request['lon'],
+                    'lga' => $address_components['county'] ?? $address_components['quarter'],
+                    'state' => $address_components['state'] ?? $address_components['region'],
+                    'town' => $address_components['city'],
+                    'country' => $address_components['country'],
+                    'country_code' => $address_components['country_code']
+                ]);
+            } else {
+                $info->lat = $request['lat'];
+                $info->lon = $request['lon'];
+                $info->lga = $address_components['county'] ?? $address_components['quarter'];
+                $info->state = $address_components['state'] ?? $address_components['region'];
+                $info->town = $address_components['city'];
+                $info->country = $address_components['country'];
+                $info->country_code = $address_components['country_code'];
+                $info->save();
+            }
+        }
         $user->save();
         toast('User Info Updated Successfully', 'success');
         return redirect('/profile/' . $request['email']);
