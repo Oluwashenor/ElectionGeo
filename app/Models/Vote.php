@@ -9,5 +9,15 @@ class Vote extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['email', 'election_id', 'contestant_id', 'name'];
+    protected $fillable = ['election_id', 'contestant_id', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function info()
+    {
+        return $this->hasOne(UserInfo::class, 'user_id', 'user_id');
+    }
 }

@@ -13,36 +13,36 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UsersController::class, 'welcome']);
 
-Route::post('/create-election', [ElectionController::class, 'create']);
-Route::get('/map/{election_id}', [ElectionController::class, 'map']);
-Route::post('/update-map', [ElectionController::class, 'updateMap']);
-Route::get('/elections', [ElectionController::class, 'index']);
-Route::get('/manage-election/{id}', [ElectionController::class, 'manage']);
-Route::get('/delete-election/{id}', [ElectionController::class, 'delete']);
-Route::get('/election-result/{id}', [ElectionController::class, 'result']);
+Route::post('/create-election', [ElectionController::class, 'create'])->middleware('auth');
+Route::get('/map/{election_id}', [ElectionController::class, 'map'])->middleware('auth');
+Route::post('/update-map', [ElectionController::class, 'updateMap'])->middleware('auth');
+Route::get('/elections', [ElectionController::class, 'index'])->middleware('auth');
+Route::get('/manage-election/{id}', [ElectionController::class, 'manage'])->middleware('auth');
+Route::get('/delete-election/{id}', [ElectionController::class, 'delete'])->middleware('auth');
+Route::get('/election-result/{id}', [ElectionController::class, 'result'])->middleware('auth');
 
-Route::get('/voting', [VoteController::class, 'index']);
-Route::post('/submit-vote', [VoteController::class, 'create']);
+Route::get('/voting', [VoteController::class, 'index'])->middleware('auth');
+Route::post('/submit-vote', [VoteController::class, 'create'])->middleware('auth');
 
 Route::post('/loginAction', [UsersController::class, 'login']);
 Route::post('/registerAction', [UsersController::class, 'register']);
 Route::post('/voterslogin', [UsersController::class, 'voterslogin']);
 Route::get('/logout', [UsersController::class, 'logout']);
-Route::get('/profile/{email}', [UsersController::class, 'profile']);
-Route::post('/updateProfile', [UsersController::class, 'updateProfile']);
+Route::get('/profile/{email}', [UsersController::class, 'profile'])->middleware('auth');
+Route::post('/updateProfile', [UsersController::class, 'updateProfile'])->middleware('auth');
 
-Route::post('/create-contestant', [ContestantController::class, 'create']);
-Route::post('/edit-contestant', [ContestantController::class, 'edit']);
-Route::get('/delete-contestant/{contestant_id}/{election_id}', [ContestantController::class, 'delete']);
+Route::post('/create-contestant', [ContestantController::class, 'create'])->middleware('auth');
+Route::post('/edit-contestant', [ContestantController::class, 'edit'])->middleware('auth');
+Route::get('/delete-contestant/{contestant_id}/{election_id}', [ContestantController::class, 'delete'])->middleware('auth');
 
-Route::get('register', function () {
+Route::get('/register', function () {
     return view('register');
 });
 
-Route::get('map', function () {
+Route::get('/map', function () {
     return view('map');
-});
+})->middleware('auth');
 
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');

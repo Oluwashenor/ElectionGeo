@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contestant;
 use App\Models\Election;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Support\Facades\Http;
@@ -119,17 +120,20 @@ class ElectionController extends Controller
             return redirect('/');
         }
         $election_id = $election->id;
-        $allvotes = $election->votes;
+        // $allvotes = $election->votes;
+        $allvotes = Vote::where('election_id', $election->id)->with('info')->get();
         $contestants = Contestant::where('election_id', $election_id)->get();
         $vote_result = [];
         $vote_counts = $allvotes->count();
+        $votes_info = [];
+        //return $allvotes;
         foreach ($contestants as $contestant) {
-
             $contestant_voters = $allvotes->where('contestant_id', $contestant->id);
+
             $contestant->vote_count = $contestant_voters->count();
-            $contestant->voters = $contestant_voters;
             $vote_info = new stdClass();
             $vote_info->contestant_name = $contestant->name;
+            $vote_info->voters = $contestant_voters;
             $vote_info->total_vote = $contestant_voters->count();
             $vote_info->color = $this->random_color();
             if ($vote_counts != 0) {
@@ -143,7 +147,29 @@ class ElectionController extends Controller
             }
             array_push($vote_result, $vote_info);
         }
+        $groupedVotersByTown = [];
+        //for the location grouping 
+        //This line goes through each of the vote result which is already grouped by contestants
+        foreach ($vote_result as $contestant_vote_result) {
+            $contestant_locations_info = [];
+            //This line picks the voters array from each contestant vote result and loops through each of them
+            foreach ($contestant_vote_result->voters as $voter) {
+                $lga = $voter->info->lga;
+                $groupedVotersByTown[$lga][] = $voter->info;
+            }
+        }
+        // return $groupedVotersByTown;
+        return view('election-result', compact('election', 'election_id', 'contestants', 'vote_counts', 'vote_result', 'groupedVotersByTown'));
+    }
 
-        return view('election-result', compact('election', 'election_id', 'contestants', 'vote_counts', 'vote_result'));
+    function groupArrayByKey($array, $key)
+    {
+        $groupedArray = [];
+        foreach ($array as $item) {
+            if (isset($item->$key)) {
+                $groupedArray[$item->$key][] = $item;
+            }
+        }
+        return $groupedArray;
     }
 }

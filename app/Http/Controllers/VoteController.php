@@ -36,7 +36,7 @@ class VoteController extends Controller
                 $ele['valid_gis'] = false;
             }
         }
-        $users_votes = Vote::where('email', $email)->get();
+        $users_votes = Vote::where('user_id', $user->id)->get();
         if ($users_votes->isEmpty()) {
             if ($elections->isEmpty()) {
                 toast('There are currently no ongoing Elections', 'info');
@@ -57,18 +57,12 @@ class VoteController extends Controller
 
     public function create(Request $request)
     {
-        $email = "";
-        $name = "";
-        $request->session()->get('name');
-        if (is_null(auth()->user())) {
-            $email = $request->session()->get('email');
-            $name = $request->session()->get('name');
-        } else {
-            $name = auth()->user()->name;
-            $email = auth()->user()->email;
+        $userId = Auth::user()->id;
+        if ($userId == null) {
+            return redirect("/login");
         }
         $alreadyVoted = Vote::where('election_id', $request["election"])
-            ->where('email', $email)->get();
+            ->where('user_id', $userId)->get();
 
         if (!$alreadyVoted->isEmpty()) {
             // Meaning the user has voted for this same election
@@ -78,8 +72,7 @@ class VoteController extends Controller
         $vote = Vote::create([
             'contestant_id' => $request["contestant"],
             'election_id' => $request["election"],
-            'email' => $email,
-            'name' => $name
+            'user_id' => $userId
         ]);
         toast('Thank you for Voting!', 'success');
         return redirect('/voting');

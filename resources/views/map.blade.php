@@ -10,11 +10,14 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <style>
         #map {
-            height: 680px;
+            height: 600px;
             max-height: 70vh;
-            margin: 3% auto;
+            margin: 2% auto;
             margin-bottom: 1%;
-            max-width: 80%;
+            max-width: 75%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            padding: 5px;
         }
 
         .row {
@@ -58,8 +61,10 @@
             <input type="hidden" name="election_id" value="{{$election_id}}" id="election_id" />
 
 
+
             <div style="text-align: center;">
-                <button style="width:auto;height:40px;" type="submit" class="btn btn-primary">Update Cordinates</button>
+                <button style="padding:10px;border-radius:10px;width:25vw;height:45px; background: #8d448b !important;border: 1px solid #8d448b !important;
+    color: #fff !important;" type="submit" class="btn btn-primary">Update Cordinates</button>
             </div>
         </form>
     </div>

@@ -16,11 +16,6 @@ $title = "Elections";
 <div class="container">
     <!-- Button trigger modal -->
 
-
-
-
-
-
     <div class="row">
         <div class="col-lg-5 content">
 

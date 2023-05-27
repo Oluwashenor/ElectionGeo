@@ -52,7 +52,7 @@ class UsersController extends Controller
         ]);
         if ($request["lat"] == null || $request["lon"] == null) {
             toast('Please grant location Permission and try again', 'info');
-            return redirect('/adminlogin');
+            return redirect('/register');
         }
         $address = $this->getAddress($request['lat'], $request['lon']);
         $address_components = $address['results'][0]["components"];
@@ -72,7 +72,7 @@ class UsersController extends Controller
             'lon' => $request['lon'],
             'lga' => $address_components['county'] ?? $address_components['quarter'],
             'state' => $address_components['state'] ?? $address_components['region'],
-            'town' => $address_components['city'],
+            'town' => $address_components['city'] ?? $address_components['town'],
             'country' => $address_components['country'],
             'country_code' => $address_components['country_code']
         ]);
@@ -162,4 +162,9 @@ class UsersController extends Controller
         toast('User Info Updated Successfully', 'success');
         return redirect('/profile/' . $request['email']);
     }
+
+
+    // $a=array("Volvo"=>"XC90","BMW"=>"X5","Toyota"=>"Highlander");
+    // print_r(array_keys($a));
+    // 
 }

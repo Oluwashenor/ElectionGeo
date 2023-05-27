@@ -7,11 +7,11 @@ $title = $election->name . "'s " . "Result";
 @section('content')
 
 <style>
-    .btn {
-        margin: 0 3px;
-    }
+.btn {
+    margin: 0 3px;
+}
 
-    strong {}
+strong {}
 </style>
 
 
@@ -29,8 +29,8 @@ $title = $election->name . "'s " . "Result";
                 </span>
             </div>
 
-            <p><strong>Election Date :</strong><small>Today</small></p>
             <p><strong>Total Votes : </strong><small>2</small></p>
+            <p><strong>Election Date :</strong><small>Today</small></p>
             <p><strong>Total Contestants : </strong><small>2</small></p>
 
             @foreach($vote_result as $contestant)
@@ -49,8 +49,10 @@ $title = $election->name . "'s " . "Result";
                 <div class="row">
                     <div class="col">
                         <span class="card-subtitle mb-2 text-muted"> </span>
-                        <div class="progress" role="progressbar" aria-label="label" aria-valuenow="{{$contestant->vote_percentage}}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{$contestant->vote_percentage}}%; background-color:{{$contestant->color}}">
+                        <div class="progress" role="progressbar" aria-label="label"
+                            aria-valuenow="{{$contestant->vote_percentage}}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar"
+                                style="width: {{$contestant->vote_percentage}}%; background-color:{{$contestant->color}}">
                                 {{$contestant->vote_percentage}}%
                             </div>
                         </div>
@@ -71,6 +73,14 @@ $title = $election->name . "'s " . "Result";
                 {{json_encode($vote_result)}}
 
             </div> -->
+            <div class="myRow" style="display: flex;
+        justify-content:center;
+        margin: 20px 0;">
+                <span class="left-span" id="top-left-lat"> <button type="button" style="margin-bottom: 25px;"
+                        class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        View Votes Locations
+                    </button></span>
+            </div>
 
         </div>
     </div>
@@ -88,23 +98,33 @@ $title = $election->name . "'s " . "Result";
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Create Contestant</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Location Summary</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="/create-contestant">
-                        {{csrf_field()}}
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Contestant Name</label>
-                            <input type="text" class="form-control" name="name">
-                        </div>
-                        <div class="mb-3">
-                            <input value="{{$election_id}}" type="hidden" class="form-control" name="election_id">
-                        </div>
+                    <div>
+                        <?php
+                        $totalLocation = count($groupedVotersByTown);
+
+                        ?>
+                        <!-- {{json_encode($groupedVotersByTown)}} -->
+                        Total Locations - {{$totalLocation}}
+
+                        @foreach($groupedVotersByTown as $location)
+
+                        <?php
+                        $locationVoteCount = count($location);
+                        ?>
+
+                        Votes for {{json_encode($location[0]->lga)}} {{$locationVoteCount}}
+
+                        @endforeach
+                    </div>
 
                 </div>
                 <div class="modal-footer">
@@ -123,22 +143,22 @@ $title = $election->name . "'s " . "Result";
 </script>
 
 <script>
-    var vote_result = @json($vote_result);
-    const ctx = document.getElementById('myChart');
-    var chartJ = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
+var vote_result = @json($vote_result);
+const ctx = document.getElementById('myChart');
+var chartJ = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
 
-            datasets: [{
-                label: 'Result',
-                data: vote_result.map(x => x.total_vote),
-                backgroundColor: vote_result.map(x => x.color),
-                hoverOffset: 4
-            }],
+        datasets: [{
+            label: 'Result',
+            data: vote_result.map(x => x.total_vote),
+            backgroundColor: vote_result.map(x => x.color),
+            hoverOffset: 4
+        }],
 
-            labels: vote_result.map(x => x.contestant_name)
-        },
-    });
+        labels: vote_result.map(x => x.contestant_name)
+    },
+});
 </script>
 
 
