@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contestant;
 use App\Models\Election;
 use App\Models\Vote;
+use App\Services\AEService;
 use Illuminate\Http\Request;
 use Illuminate\Console\View\Components\Alert;
 use Illuminate\Support\Facades\Http;
@@ -13,6 +14,14 @@ use stdClass;
 
 class ElectionController extends Controller
 {
+
+    protected $aEService;
+
+    public function __construct(AEService $aEService)
+    {
+        $this->aEService = $aEService;
+    }
+
     public function create(Request $request)
     {
         $validatedData = $request->validate([
@@ -30,6 +39,8 @@ class ElectionController extends Controller
 
     public function index()
     {
+        $this->aEService->Encrypter();
+        return "Yen Yen";
         $elections = Election::all();
         return view('elections', compact('elections'));
     }
