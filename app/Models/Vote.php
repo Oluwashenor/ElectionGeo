@@ -16,6 +16,11 @@ class Vote extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function contestant()
+    {
+        return $this->belongsTo(Contestant::class);
+    }
+
     public function info()
     {
         return $this->hasOne(UserInfo::class, 'user_id', 'user_id');

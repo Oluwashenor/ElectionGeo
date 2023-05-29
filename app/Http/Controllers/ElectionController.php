@@ -95,7 +95,7 @@ class ElectionController extends Controller
             array_push($vote_result, $vote_info);
         }
         $vote_counts = $allvotes->count();
-        return view('manage-election', compact('election', 'election_id', 'contestants', 'vote_counts', 'vote_result'));
+        return view('manage-election', compact('allvotes', 'election', 'election_id', 'contestants', 'vote_counts', 'vote_result'));
     }
 
     public function delete($id)

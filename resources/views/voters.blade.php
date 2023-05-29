@@ -46,7 +46,7 @@ $title = "Voting Module";
                         {{$election->valid_gis ? "In Range" : "Out of range"}}
                     </td> -->
                     <td>
-                        <button type="button" class="btn btn-primary {{$election->voted ? 'disabled' : ''}} {{$election->valid_gis ? '' : 'disabled'}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$election->id}}">
+                        <button type="button" class="btn btn-primary {{$election->voted ? 'disabled' : ''}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$election->id}}">
                             Vote
                         </button>
                         <div class="modal fade" id="staticBackdrop{{$election->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{$election->id}}" aria-hidden="true">
