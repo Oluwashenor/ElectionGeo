@@ -9,6 +9,8 @@ use App\Models\UserInfo;
 use App\Models\Election;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use App\Mail\VerificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
@@ -48,6 +50,7 @@ class UsersController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'nin' => ['required', 'string', 'min:11', 'max:11', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         if ($request["lat"] == null || $request["lon"] == null) {
@@ -63,8 +66,9 @@ class UsersController extends Controller
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password'] ?? ""),
-            'role' => $role
+            'password' => Hash::make($validatedData['password']),
+            'role' => $role,
+            'nin' => $validatedData['nin']
         ]);
         $info = UserInfo::create([
             'user_id' => $user->id,
@@ -76,6 +80,7 @@ class UsersController extends Controller
             'country' => $address_components['country'],
             'country_code' => $address_components['country_code']
         ]);
+        $token = $this->sendEmail($validatedData['email']);
         Auth::login($user);
         return redirect('/');
     }
@@ -163,7 +168,17 @@ class UsersController extends Controller
         return redirect('/profile/' . $request['email']);
     }
 
+    public function sendEmail($email)
+    {
+        $min = 100;
+        $max = 999;
 
+        $partA = rand($min, $max);
+        $partB = rand($min, $max);
+        $token = $partA . "-" . $partB;
+        Mail::to($email)->send(new VerificationMail($token));
+        return $token;
+    }
     // $a=array("Volvo"=>"XC90","BMW"=>"X5","Toyota"=>"Highlander");
     // print_r(array_keys($a));
     // 

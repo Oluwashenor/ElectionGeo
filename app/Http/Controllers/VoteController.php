@@ -28,14 +28,14 @@ class VoteController extends Controller
         //fetching all elections happening today
         $allElectionsToday = Election::where('election_date', Carbon::today()->toDateString())->with('contestants')->get();
         $elections =  $allElectionsToday->where('contestants', '!=', '[]');
-        foreach ($elections as $ele) {
-            $can_vote = $this->validCoordinates($user->info->lat, $user->info->lon, $ele->top_left_lat, $ele->top_left_lng, $ele->bottom_right_lat, $ele->bottom_right_lng);
-            if ($can_vote) {
-                $ele['valid_gis'] = true;
-            } else {
-                $ele['valid_gis'] = false;
-            }
-        }
+        // foreach ($elections as $ele) {
+        //     $can_vote = $this->validCoordinates($user->info->lat, $user->info->lon, $ele->top_left_lat, $ele->top_left_lng, $ele->bottom_right_lat, $ele->bottom_right_lng);
+        //     if ($can_vote) {
+        //         $ele['valid_gis'] = true;
+        //     } else {
+        //         $ele['valid_gis'] = false;
+        //     }
+        // }
         $users_votes = Vote::where('user_id', $user->id)->get();
         if ($users_votes->isEmpty()) {
             if ($elections->isEmpty()) {
