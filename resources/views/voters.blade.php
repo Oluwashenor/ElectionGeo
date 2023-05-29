@@ -17,7 +17,7 @@ $title = "Voting Module";
                     <th scope="col">Election Name</th>
                     <th scope="col">Election Date</th>
                     <th scope="col">Vote Status</th>
-                    <th scope="col">GIS Status</th>
+                    <!-- <th scope="col">GIS Status</th> -->
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -42,9 +42,9 @@ $title = "Voting Module";
                     <td>
                         {{$election->voted ? "Voted" : "Unvoted"}}
                     </td>
-                    <td style="{{ $election->valid_gis ? 'color: green' : 'color: red'}}">
+                    <!-- <td style="{{ $election->valid_gis ? 'color: green' : 'color: red'}}">
                         {{$election->valid_gis ? "In Range" : "Out of range"}}
-                    </td>
+                    </td> -->
                     <td>
                         <button type="button" class="btn btn-primary {{$election->voted ? 'disabled' : ''}} {{$election->valid_gis ? '' : 'disabled'}}" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{$election->id}}">
                             Vote
