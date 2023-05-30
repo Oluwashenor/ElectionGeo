@@ -39,7 +39,6 @@ class ElectionController extends Controller
 
     public function index()
     {
-        $this->aEService->Encrypter();
         return "Yen Yen";
         $elections = Election::all();
         return view('elections', compact('elections'));

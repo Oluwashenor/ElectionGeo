@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Election;
 use App\Models\Vote;
 use App\Models\User;
+use App\Services\AEService;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -15,6 +16,13 @@ use stdClass;
 
 class VoteController extends Controller
 {
+    protected $aEService;
+
+    public function __construct(AEService $aEService)
+    {
+        $this->aEService = $aEService;
+    }
+
     public function index(Request $request)
     {
         //Trying to fetch current user's Email using AUTH

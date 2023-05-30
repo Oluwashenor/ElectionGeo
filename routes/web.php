@@ -21,10 +21,14 @@ Route::get('/manage-election/{id}', [ElectionController::class, 'manage'])->midd
 Route::get('/delete-election/{id}', [ElectionController::class, 'delete'])->middleware('auth');
 Route::get('/election-result/{id}', [ElectionController::class, 'result'])->middleware('auth');
 
+Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirm');
+
 Route::get('/voting', [VoteController::class, 'index'])->middleware('auth');
 Route::post('/submit-vote', [VoteController::class, 'create'])->middleware('auth');
 
 Route::post('/loginAction', [UsersController::class, 'login']);
+Route::get('/otp', [UsersController::class, 'otp']);
+Route::post('/verifyOTP', [UsersController::class, 'verifyOTP']);
 Route::post('/registerAction', [UsersController::class, 'register']);
 Route::post('/voterslogin', [UsersController::class, 'voterslogin']);
 Route::get('/logout', [UsersController::class, 'logout']);

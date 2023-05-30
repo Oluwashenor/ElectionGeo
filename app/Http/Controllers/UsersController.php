@@ -7,16 +7,27 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\UserInfo;
 use App\Models\Election;
+use App\Services\AEService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use App\Mail\VerificationMail;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
 
+    protected $aEService;
+
+    public function __construct(AEService $aEService)
+    {
+        $this->aEService = $aEService;
+    }
+
     public function welcome()
     {
+        return Auth::user();
         if (@auth()->check()) {
             $allElections = Election::with('contestants')->get();
             $elections =  $allElections->where('contestants', '!=', '[]');
@@ -41,6 +52,11 @@ class UsersController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
+    }
+
+    public function otp(Request $request)
+    {
+        return view('otp');
     }
 
     // Register
@@ -76,13 +92,30 @@ class UsersController extends Controller
             'lon' => $request['lon'],
             'lga' => $address_components['county'] ?? $address_components['quarter'],
             'state' => $address_components['state'] ?? $address_components['region'],
-            'town' => $address_components['city'] ?? $address_components['town'],
+            'town' => $address_components['city'] ?? $address_components['town'] ?? $address_components['suburb'],
             'country' => $address_components['country'],
             'country_code' => $address_components['country_code']
         ]);
         $token = $this->sendEmail($validatedData['email']);
-        Auth::login($user);
-        return redirect('/');
+        $user->token = $token;
+        $user->save();
+        return redirect('/login');
+    }
+
+    public function verifyOTP(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if ($user != null) {
+            if ($user->token == $request->otp) {
+                $user->email_verified_at = Carbon::today()->toDateString();
+                $user->save();
+                return redirect('/login');
+            } else {
+                toast('Invalid User Info passed', 'alert');
+                return redirect('/');
+            }
+        }
+        toast('Invalid User Info passed', 'alert');
     }
 
     // Logout
@@ -170,16 +203,34 @@ class UsersController extends Controller
 
     public function sendEmail($email)
     {
-        $min = 100;
-        $max = 999;
+        // $min = 100;
+        // $max = 999;
 
-        $partA = rand($min, $max);
-        $partB = rand($min, $max);
-        $token = $partA . "-" . $partB;
-        Mail::to($email)->send(new VerificationMail($token));
+        // $partA = rand($min, $max);
+        // $partB = rand($min, $max);
+        // $token = $partA . "-" . $partB;
+
+
+        // Generate confirmation link
+        $token = Str::random(64); // Generate a random token
+        $confirmationLink = route('confirm', ['token' => $token]); // Generate the confirmation link using a named route
+
+        Mail::to($email)->send(new VerificationMail($confirmationLink));
         return $token;
     }
     // $a=array("Volvo"=>"XC90","BMW"=>"X5","Toyota"=>"Highlander");
     // print_r(array_keys($a));
     // 
+
+    public function confirmEmail($token)
+    {
+        $user = User::where('token', $token)->first();
+        if ($user != null) {
+            $user->email_verified_at = Carbon::today()->toDateString();
+            $user->save();
+            toast('User Info Verified Successfully', 'success');
+            return redirect('/login');
+        }
+        toast('Invalid User Info passed', 'alert');
+    }
 }

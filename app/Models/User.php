@@ -22,7 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'nin'
+        'nin',
+        'token'
     ];
 
     /**
@@ -48,4 +49,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserInfo::class);
     }
+
+    // protected $appends = ['email'];
+
+    // public function getEmailAttribute($value)
+    // {
+    //     return $value;
+    // }
 }
