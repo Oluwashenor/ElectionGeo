@@ -39,7 +39,6 @@ class ElectionController extends Controller
 
     public function index()
     {
-        return "Yen Yen";
         $elections = Election::all();
         return view('elections', compact('elections'));
     }
@@ -91,6 +90,14 @@ class ElectionController extends Controller
         }
         $election_id = $election->id;
         $allvotes = $election->votes;
+        if ($allvotes != null) {
+            foreach ($allvotes as $voter) {
+                $decryptedname = $this->aEService->decrypt($voter->user->name); //
+                $decryptednin = $this->aEService->decrypt($voter->user->nin); //
+                $voter->user->name = $decryptedname;
+                $voter->user->nin = $decryptednin;
+            }
+        }
         $contestants = Contestant::where('election_id', $election_id)->get();
         $vote_result = [];
         foreach ($contestants as $contestant) {

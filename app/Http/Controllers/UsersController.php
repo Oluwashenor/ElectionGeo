@@ -27,9 +27,6 @@ class UsersController extends Controller
 
     public function welcome()
     {
-        //echo Auth::user();
-        //$user = User::first();
-        //echo $this->aEService->decrypt($user->name);
         if (@auth()->check()) {
             $allElections = Election::with('contestants')->get();
             $elections =  $allElections->where('contestants', '!=', '[]');
@@ -44,16 +41,43 @@ class UsersController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
+        $users = $this->getDecrptedUsers();
+        $user = $users->where('email', $request['email'])->first();
+        if ($user == null) {
+            toast('Username or Password Invalid', 'alert');
+            return redirect()->back();
+        }
+        $credentials['email'] = $user->encryptedEmail;
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
+            $request->session()->put('email', $request['email']);
+            $request->session()->put('name', $user->name);
             return redirect()->intended('/');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
+    }
+
+    public function getDecrptedUsers()
+    {
+        $users = User::all();
+
+        if ($users->isEmpty()) {
+            return null; // No users found
+        }
+        foreach ($users as $user) {
+            $decryptedEmail = $this->aEService->decrypt($user->email); //
+            $decryptedRole = $this->aEService->decrypt($user->role); //
+            $decryptedName = $this->aEService->decrypt($user->name); //
+            $user->encryptedEmail = $user->email;
+            $user->encryptedName = $user->name;
+            $user->email = $decryptedEmail;
+            $user->role = $decryptedRole;
+            $user->name = $decryptedName;
+        }
+        return $users;
     }
 
     public function otp(Request $request)
@@ -130,6 +154,7 @@ class UsersController extends Controller
         return redirect('/login');
     }
 
+
     private function getAddress($lat, $lon)
     {
         $response = Http::get('https://api.opencagedata.com/geocode/v1/json?key=7ed3f82e9fcf42f0aebf417009a1d527&q=' . $lat . ',' . $lon . '&no_annotations=1&pretty=1');
@@ -142,12 +167,6 @@ class UsersController extends Controller
             return $errorMessage;
             // handle the error
         }
-    }
-
-    public function saveVoterSession(Request $request)
-    {
-        $request->session()->put('email', $request['email']);
-        $request->session()->put('name', $request['name']);
     }
 
     public function profile($email)
