@@ -27,7 +27,9 @@ class UsersController extends Controller
 
     public function welcome()
     {
-        return Auth::user();
+        //echo Auth::user();
+        //$user = User::first();
+        //echo $this->aEService->decrypt($user->name);
         if (@auth()->check()) {
             $allElections = Election::with('contestants')->get();
             $elections =  $allElections->where('contestants', '!=', '[]');
@@ -80,11 +82,11 @@ class UsersController extends Controller
             $role = 'admin';
         }
         $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
+            'name' => $this->aEService->encrypt($validatedData['name']),
+            'email' => $this->aEService->encrypt($validatedData['email']),
             'password' => Hash::make($validatedData['password']),
-            'role' => $role,
-            'nin' => $validatedData['nin']
+            'role' => $this->aEService->encrypt($role),
+            'nin' => $this->aEService->encrypt($validatedData['nin'])
         ]);
         $info = UserInfo::create([
             'user_id' => $user->id,
@@ -99,6 +101,7 @@ class UsersController extends Controller
         $token = $this->sendEmail($validatedData['email']);
         $user->token = $token;
         $user->save();
+        toast('Please check your mail for email confirmation', 'info');
         return redirect('/login');
     }
 

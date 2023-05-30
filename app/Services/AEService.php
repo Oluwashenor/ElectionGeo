@@ -5,6 +5,25 @@ namespace App\Services;
 
 class AEService
 {
+
+    function encrypt($data)
+    {
+        $key = "encryptionkey123";
+        $iv = openssl_random_pseudo_bytes(16); // Generate a random initialization vector (IV)
+        $encryptedData = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        return base64_encode($iv . $encryptedData);
+    }
+
+    function decrypt($encryptedData)
+    {
+        $key = "encryptionkey123";
+        $ivAndEncryptedData = base64_decode($encryptedData);
+        $iv = substr($ivAndEncryptedData, 0, 16);
+        $encryptedData = substr($ivAndEncryptedData, 16);
+        $decryptedData = openssl_decrypt($encryptedData, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        return $decryptedData;
+    }
+
     public function Encrypter($dataToEncrypt)
     {
         echo "I got " . $dataToEncrypt;

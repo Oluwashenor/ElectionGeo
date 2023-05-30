@@ -50,10 +50,18 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class);
     }
 
-    // protected $appends = ['email'];
+    protected $encryptable = ['name'];
 
-    // public function getEmailAttribute($value)
-    // {
-    //     return $value;
-    // }
+    public function decrypt($attribute)
+    {
+        if (in_array($attribute, $this->encryptable)) {
+            $key = "encryptionkey123";
+            $ivAndEncryptedData = base64_decode($this->attributes[$attribute]);
+            $iv = substr($ivAndEncryptedData, 0, 16);
+            $encryptedData = substr($ivAndEncryptedData, 16);
+            $decryptedData = openssl_decrypt($encryptedData, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+            return $decryptedData;
+        }
+        return $this->attributes[$attribute];
+    }
 }
