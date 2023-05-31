@@ -29,8 +29,11 @@ class UsersController extends Controller
     {
         if (@auth()->check()) {
             $allElections = Election::with('contestants')->get();
+            $totalUsers = User::all()->count();
             $elections =  $allElections->where('contestants', '!=', '[]');
-            return view('welcome', compact('elections'));
+            $allElectionsCount = $allElections->count();
+            $allOngoingElectionsCount = $allElections->where('election_date', Carbon::today()->toDateString())->count();
+            return view('welcome', compact('elections', 'totalUsers', 'allElectionsCount', 'allOngoingElectionsCount'));
         }
         return redirect("/login");
     }
@@ -171,10 +174,11 @@ class UsersController extends Controller
 
     public function profile($email)
     {
-        $user = User::where('email', $email)->with('info')->get()[0];
-        if ($user->count() == 0) {
+        $users = $this->getDecrptedUsers();
+        $user = $users->where('email', $email)->first();
+        if ($user == null) {
             toast('User Not Found', 'alert');
-            return redirect('/voting');
+            return redirect('/');
         }
         return view('profile', compact('user'));
     }
@@ -182,7 +186,9 @@ class UsersController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $user = User::where('email', $request['email'])->with('info')->get()[0];
+        $user = User::find($request['user_id'])->with('info')->first();
+        $decryptedName = $this->aEService->decrypt($user->name);
+        $recordUpdated = false;
         $updateLocation = false;
         if (($user->info == null) || ($user->info->lat != $request['lat']) || ($user->info->lon != $request['lon'])) {
             $updateLocation = true;
@@ -193,7 +199,10 @@ class UsersController extends Controller
             toast('User Not Found', 'alert');
             return redirect('/voting');
         }
-        $user->name = $request['name'];
+        if ($decryptedName != $request['name']) {
+            $user->name = $this->aEService->encrypt($request['name']);
+            $recordUpdated = true;
+        }
         if ($updateLocation) {
             $info = UserInfo::where('user_id', $user->id)->first();
             if ($info == null) {
@@ -203,7 +212,7 @@ class UsersController extends Controller
                     'lon' => $request['lon'],
                     'lga' => $address_components['county'] ?? $address_components['quarter'],
                     'state' => $address_components['state'] ?? $address_components['region'],
-                    'town' => $address_components['city'],
+                    'town' => $address_components['city'] ?? $address_components['town'] ?? $address_components['suburb'],
                     'country' => $address_components['country'],
                     'country_code' => $address_components['country_code']
                 ]);
@@ -212,14 +221,16 @@ class UsersController extends Controller
                 $info->lon = $request['lon'];
                 $info->lga = $address_components['county'] ?? $address_components['quarter'];
                 $info->state = $address_components['state'] ?? $address_components['region'];
-                $info->town = $address_components['city'];
+                $info->town = $address_components['city'] ?? $address_components['town'] ?? $address_components['suburb'];
                 $info->country = $address_components['country'];
                 $info->country_code = $address_components['country_code'];
                 $info->save();
             }
         }
-        $user->save();
-        toast('User Info Updated Successfully', 'success');
+        if ($recordUpdated) {
+            $user->save();
+            toast('User Info Updated Successfully', 'success');
+        }
         return redirect('/profile/' . $request['email']);
     }
 

@@ -36,6 +36,8 @@ $title = "My Profile";
         <form method="POST" action="/updateProfile">
             {{csrf_field()}}
 
+            <input type="hidden" readonly name="user_id" class="form-control-plaintext" id="staticEmail"
+                value="{{$user->id}}">
             <div class="form-group row" style="margin-top: 2%;">
                 <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-10">

@@ -27,7 +27,7 @@ $title = $election->name;
                         Add Contestant
                     </button></span>
 
-                <span class="right-span" id="top-left-lng">
+                <!-- <span class="right-span" id="top-left-lng">
                     <a href="/map/{{$election_id}}" class="btn btn-primary">
                         @if($election->top_left_lat == null)
                         Set Coordinates
@@ -37,7 +37,7 @@ $title = $election->name;
 
                         @endif
                     </a>
-                </span>
+                </span> -->
             </div>
 
             <table class="table">
@@ -194,8 +194,14 @@ $title = $election->name;
                         <table class="table">
                             <thead>
                                 <tr>
+                                    @php
+                                    $counter = 0
+                                    @endphp
+                                    <th>#</th>
                                     <th>Name</th>
                                     <th>NIN</th>
+                                    <th>Region</th>
+                                    <th>Location</th>
                                     <th>Contestants</th>
                                 </tr>
                             </thead>
@@ -203,8 +209,14 @@ $title = $election->name;
                             <tbody>
                                 @foreach($allvotes as $vote)
                                 <tr>
+                                    @php
+                                    $counter = $counter + 1;
+                                    @endphp
+                                    <td>{{$counter}}</td>
                                     <td>{{$vote->user->name}}</td>
                                     <td>{{$vote->user->nin}}</td>
+                                    <td>{{$vote->user->info->lga}}</td>
+                                    <td>{{$vote->user->info->town}}</td>
                                     <td>{{$vote->contestant->name}}</td>
                                 </tr>
                                 @endforeach
