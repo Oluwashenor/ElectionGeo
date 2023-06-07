@@ -137,7 +137,6 @@ class ElectionController extends Controller
             return redirect('/');
         }
         $election_id = $election->id;
-        // $allvotes = $election->votes;
         $allvotes = Vote::where('election_id', $election->id)->with('info')->get();
         $contestants = Contestant::where('election_id', $election_id)->get();
         $vote_result = [];

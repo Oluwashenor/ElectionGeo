@@ -72,9 +72,10 @@ $appName = "Geo-Election";
                 @auth
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
                         <li class="nav-item">
+                            @if(Session::get('role') == 'admin')
                             <a class="nav-link" href="/elections">Elections</a>
+                            @endif
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/voting">Vote</a>

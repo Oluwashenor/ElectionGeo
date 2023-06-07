@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use App\Mail\VerificationMail;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Str;
 
 class UsersController extends Controller
@@ -55,6 +56,7 @@ class UsersController extends Controller
             $request->session()->regenerate();
             $request->session()->put('email', $request['email']);
             $request->session()->put('name', $user->name);
+            $request->session()->put('role', $user->role);
             return redirect()->intended('/');
         }
 
@@ -103,11 +105,29 @@ class UsersController extends Controller
             return redirect('/register');
         }
         $address = $this->getAddress($request['lat'], $request['lon']);
+        if ($address == null) {
+            toast('Unable to get your location, Please try again', 'info');
+            return redirect('/register');
+        }
         $address_components = $address['results'][0]["components"];
         $emails_for_admins = array("adeshiname@gmail.com");
         if (in_array($validatedData['email'], $emails_for_admins)) {
             $role = 'admin';
         }
+
+
+        // $client = new \GuzzleHttp\Client();
+
+        // $response = $client->request('POST', 'https://api.roqqu.com/prod/v1/user/nin-verify', [
+        //   'headers' => [
+        //     'Authorization' => 'Bearer RQ-SEC-XXXXXXXXX',
+        //     'accept' => 'application/json',
+        //     'content-type' => 'application/json',
+        //   ],
+        // ]);
+
+        //echo $response->getBody();
+
         $user = User::create([
             'name' => $this->aEService->encrypt($validatedData['name']),
             'email' => $this->aEService->encrypt($validatedData['email']),
@@ -160,15 +180,19 @@ class UsersController extends Controller
 
     private function getAddress($lat, $lon)
     {
-        $response = Http::get('https://api.opencagedata.com/geocode/v1/json?key=7ed3f82e9fcf42f0aebf417009a1d527&q=' . $lat . ',' . $lon . '&no_annotations=1&pretty=1');
-        if ($response->ok()) {
-            $data = $response->json();
-            return $data;
-            // do something with the response data
-        } else {
-            $errorMessage = $response->json()['message'];
-            return $errorMessage;
-            // handle the error
+        try {
+            $response = Http::get('https://api.opencagedata.com/geocode/v1/json?key=7ed3f82e9fcf42f0aebf417009a1d527&q=' . $lat . ',' . $lon . '&no_annotations=1&pretty=1');
+            if ($response->ok()) {
+                $data = $response->json();
+                return $data;
+                // do something with the response data
+            } else {
+                $errorMessage = $response->json()['message'];
+                return $errorMessage;
+                // handle the error
+            }
+        } catch (Exception $ex) {
+            return null;
         }
     }
 

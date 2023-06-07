@@ -7,11 +7,11 @@ $title = $election->name . "'s " . "Result";
 @section('content')
 
 <style>
-    .btn {
-        margin: 0 3px;
-    }
+.btn {
+    margin: 0 3px;
+}
 
-    strong {}
+strong {}
 </style>
 
 
@@ -29,9 +29,9 @@ $title = $election->name . "'s " . "Result";
                 </span>
             </div>
             <hr>
-            <p><strong>Total Votes : </strong><small>2</small></p>
-            <p><strong>Election Date :</strong><small>Today</small></p>
-            <p><strong>Total Contestants : </strong><small>2</small></p>
+            <p><strong>Total Votes : </strong><small>{{$vote_counts}}</small></p>
+            <p><strong>Election Date :</strong><small>{{$election->election_date}}</small></p>
+            <p><strong>Total Contestants : </strong><small>{{$contestants->count()}}</small></p>
 
             @foreach($vote_result as $contestant)
             <div class="aspirant" style="margin-bottom: 10px;padding:10px;">
@@ -49,8 +49,10 @@ $title = $election->name . "'s " . "Result";
                 <div class="row">
                     <div class="col">
                         <span class="card-subtitle mb-2 text-muted"> </span>
-                        <div class="progress" role="progressbar" aria-label="label" aria-valuenow="{{$contestant->vote_percentage}}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{$contestant->vote_percentage}}%; background-color:{{$contestant->color}}">
+                        <div class="progress" role="progressbar" aria-label="label"
+                            aria-valuenow="{{$contestant->vote_percentage}}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar"
+                                style="width: {{$contestant->vote_percentage}}%; background-color:{{$contestant->color}}">
                                 {{$contestant->vote_percentage}}%
                             </div>
                         </div>
@@ -73,7 +75,8 @@ $title = $election->name . "'s " . "Result";
             <div class="myRow" style="display: flex;
         justify-content:center;
         margin: 20px 0;">
-                <span class="left-span" id="top-left-lat"> <button type="button" style="margin-bottom: 25px;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <span class="left-span" id="top-left-lat"> <button type="button" style="margin-bottom: 25px;"
+                        class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         View Votes Locations
                     </button></span>
             </div>
@@ -94,7 +97,8 @@ $title = $election->name . "'s " . "Result";
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -140,22 +144,22 @@ $title = $election->name . "'s " . "Result";
 </script>
 
 <script>
-    var vote_result = @json($vote_result);
-    const ctx = document.getElementById('myChart');
-    var chartJ = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
+var vote_result = @json($vote_result);
+const ctx = document.getElementById('myChart');
+var chartJ = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
 
-            datasets: [{
-                label: 'Result',
-                data: vote_result.map(x => x.total_vote),
-                backgroundColor: vote_result.map(x => x.color),
-                hoverOffset: 4
-            }],
+        datasets: [{
+            label: 'Result',
+            data: vote_result.map(x => x.total_vote),
+            backgroundColor: vote_result.map(x => x.color),
+            hoverOffset: 4
+        }],
 
-            labels: vote_result.map(x => x.contestant_name)
-        },
-    });
+        labels: vote_result.map(x => x.contestant_name)
+    },
+});
 </script>
 
 
