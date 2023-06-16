@@ -127,7 +127,7 @@ class UsersController extends Controller
             return redirect('/register');
         }
         $address_components = $address['results'][0]["components"];
-        $emails_for_admins = array("adeshiname@gmail.com");
+        $emails_for_admins = array("adeshiname@gmail.com", "elfaithful@gmail.com");
         if (in_array($validatedData['email'], $emails_for_admins)) {
             $role = 'admin';
         }
