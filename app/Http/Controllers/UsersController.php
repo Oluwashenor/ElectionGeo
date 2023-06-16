@@ -253,7 +253,7 @@ class UsersController extends Controller
                     'lon' => $request['lon'],
                     'lga' => $address_components['county'] ?? $address_components['quarter'],
                     'state' => $address_components['state'] ?? $address_components['region'],
-                    'town' => $address_components['city'] ?? $address_components['town'] ?? $address_components['suburb'],
+                    'town' => $address_components['city'] ?? $address_components['town'] ?? $address_components['suburb'] ?? $address_components['county'],
                     'country' => $address_components['country'],
                     'country_code' => $address_components['country_code']
                 ]);
