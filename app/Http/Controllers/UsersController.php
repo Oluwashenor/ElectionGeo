@@ -68,7 +68,6 @@ class UsersController extends Controller
     public function getDecrptedUsers()
     {
         $users = User::all();
-
         if ($users->isEmpty()) {
             return null; // No users found
         }
@@ -76,11 +75,14 @@ class UsersController extends Controller
             $decryptedEmail = $this->aEService->decrypt($user->email); //
             $decryptedRole = $this->aEService->decrypt($user->role); //
             $decryptedName = $this->aEService->decrypt($user->name); //
+            $decryptedNIN = $this->aEService->decrypt($user->nin); //
             $user->encryptedEmail = $user->email;
             $user->encryptedName = $user->name;
+            $user->encryptedNIN = $user->nin;
             $user->email = $decryptedEmail;
             $user->role = $decryptedRole;
             $user->name = $decryptedName;
+            $user->nin = $decryptedNIN;
         }
         return $users;
     }
@@ -100,9 +102,24 @@ class UsersController extends Controller
             'nin' => ['required', 'string', 'min:11', 'max:11', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+
         if ($request["lat"] == null || $request["lon"] == null) {
             toast('Please grant location Permission and try again', 'info');
             return redirect('/register');
+        }
+        $users = $this->getDecrptedUsers();
+        if ($users != null) {
+            $user = $users->where('email', $request['email'])
+                ->first();
+            if ($user != null) {
+                toast('E-Mail already exist', 'info');
+                return redirect('/register');
+            }
+            $ninexist = $users->where('nin', $request['nin'])->first();
+            if ($ninexist != null) {
+                toast('NIN already exist', 'info');
+                return redirect('/register');
+            }
         }
         $address = $this->getAddress($request['lat'], $request['lon']);
         if ($address == null) {

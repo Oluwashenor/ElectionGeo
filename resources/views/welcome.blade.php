@@ -7,18 +7,18 @@ $title = "Dashboard";
 @section('content')
 
 <style>
-    .btn {
-        margin: 0 3px;
-    }
+.btn {
+    margin: 0 3px;
+}
 
-    #titleDiv {
-        margin-top: 10px;
-        margin-bottom: 5px;
-    }
+#titleDiv {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
 
-    #titleDiv span {
-        font-size: larger;
-    }
+#titleDiv span {
+    font-size: larger;
+}
 </style>
 
 
@@ -53,8 +53,7 @@ $title = "Dashboard";
     </div>
 </div>
 
-
-@if($elections != null)
+@if($elections != '[]')
 <div class="container">
     <div class="row" id="titleDiv" style="text-align: center;display:flex;justify-content:center;">On Going
         Elections</div>
@@ -70,7 +69,7 @@ $title = "Dashboard";
 </div>
 
 @else
-<div class="container" style="text-align: center;margin-top:10%;">
+<div class="container" style="text-align: center;margin-top:15%;">
     There are currently no elections on going
 </div>
 

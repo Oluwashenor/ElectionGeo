@@ -1,4 +1,1 @@
-// resources/views/mail/test-email.blade.php
-Hey,
-Can your Laravel app send emails yet? 😉
-Funny Coder {{$token}}
+Welcome, Please verify your account to begin voting <a href="{{$token}}">Click Here to Verify your email</a>
