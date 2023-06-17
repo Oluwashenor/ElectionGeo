@@ -4,6 +4,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ElectionController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\ContestantController;
+use App\Http\Controllers\NinServerController;
 use Illuminate\Support\Facades\Route;
 /*
 | Web Routes
@@ -17,6 +18,11 @@ Route::post('/create-election', [ElectionController::class, 'create'])->middlewa
 Route::get('/map/{election_id}', [ElectionController::class, 'map'])->middleware('auth');
 Route::post('/update-map', [ElectionController::class, 'updateMap'])->middleware('auth');
 Route::get('/elections', [ElectionController::class, 'index'])->middleware('auth');
+
+
+Route::get('/ninserver', [NinServerController::class, 'index']); //->middleware('auth');
+Route::post('/create-nin-record', [NinServerController::class, 'create']); //->middleware('auth');
+
 Route::get('/manage-election/{id}', [ElectionController::class, 'manage'])->middleware('auth');
 Route::get('/delete-election/{id}', [ElectionController::class, 'delete'])->middleware('auth');
 Route::get('/election-result/{id}', [ElectionController::class, 'result'])->middleware('auth');

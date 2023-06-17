@@ -11,6 +11,7 @@ use App\Services\AEService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use App\Mail\VerificationMail;
+use App\Models\NinServer;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Exception;
@@ -121,6 +122,16 @@ class UsersController extends Controller
                 return redirect('/register');
             }
         }
+        $verifyNINFromServer = $this->verifyNINFromServer($validatedData['nin']);
+        if ($verifyNINFromServer == null) {
+            toast('Invalid NIN, Please check and try again', 'info');
+            return redirect('/register');
+        }
+
+        // else {
+        //     $nameValid = checkStringContainment($verifyNINFromServer->name,$validatedData['nin']);
+        // }
+
         $address = $this->getAddress($request['lat'], $request['lon']);
         if ($address == null) {
             toast('Unable to get your location, Please try again', 'info');
@@ -131,19 +142,6 @@ class UsersController extends Controller
         if (in_array($validatedData['email'], $emails_for_admins)) {
             $role = 'admin';
         }
-
-
-        // $client = new \GuzzleHttp\Client();
-
-        // $response = $client->request('POST', 'https://api.roqqu.com/prod/v1/user/nin-verify', [
-        //   'headers' => [
-        //     'Authorization' => 'Bearer RQ-SEC-XXXXXXXXX',
-        //     'accept' => 'application/json',
-        //     'content-type' => 'application/json',
-        //   ],
-        // ]);
-
-        //echo $response->getBody();
 
         $user = User::create([
             'name' => $this->aEService->encrypt($validatedData['name']),
@@ -306,5 +304,27 @@ class UsersController extends Controller
             return redirect('/login');
         }
         toast('Invalid User Info passed', 'alert');
+    }
+
+    public function verifyNINFromServer($nin)
+    {
+        $nin = NinServer::where('nin', $nin)->first();
+        if ($nin != null) {
+            return $nin;
+        }
+        return null;
+    }
+
+    public function checkStringContainment($valueA, $valueB)
+    {
+        $stringA = strtolower(str_replace(' ', '', $valueA));
+        $stringB = strtolower(str_replace(' ', '', $valueB));
+
+        if (strpos($stringA, $stringB) !== false) {
+            //Contains
+            return true;
+        } else {
+            return false;
+        }
     }
 }
