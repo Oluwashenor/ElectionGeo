@@ -153,6 +153,10 @@ $appName = "NIN Server";
                                 <input type="text" required class="form-control" name="lastname">
                             </div>
                             <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Address</label>
+                                <input type="text" required class="form-control" name="address">
+                            </div>
+                            <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">NIN</label>
                                 <input type="text" required class="form-control" name="nin">
                             </div>

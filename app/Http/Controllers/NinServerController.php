@@ -23,6 +23,7 @@ class NinServerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'firstname' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
             'lastname' => ['required', 'string', 'max:255'],
             'nin' => ['required', 'string', 'min:11', 'max:11', 'unique:nin_servers'],
         ]);
@@ -49,7 +50,8 @@ class NinServerController extends Controller
         $record = NinServer::create([
             'firstname' => $request['firstname'],
             'lastname' => $request['lastname'],
-            'nin' => $request['nin']
+            'nin' => $request['nin'],
+            'address' => $request['address']
         ]);
 
         $record->save();
