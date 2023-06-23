@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgotPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -47,12 +48,19 @@ class UsersController extends Controller
             'password' => ['required'],
         ]);
         $users = $this->getDecrptedUsers();
-        $user = $users->where('email', $request['email'])->first();
-        if ($user == null) {
-            toast('Username or Password Invalid', 'alert');
-            return redirect()->back();
+        if ($users != null) {
+            $user = $users->where('email', $request['email'])->first();
+            if ($user == null) {
+                toast('Username or Password Invalid', 'alert');
+                return redirect()->back();
+            }
+            $credentials['email'] = $user->encryptedEmail;
+            if ($user->email_verified_at == null) {
+                toast('Account has not been Verified, Please Verify your account', 'alert');
+                return redirect()->back();
+            }
         }
-        $credentials['email'] = $user->encryptedEmail;
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $request->session()->put('email', $request['email']);
@@ -91,6 +99,57 @@ class UsersController extends Controller
     public function otp(Request $request)
     {
         return view('otp');
+    }
+
+    public function forgotpassword(Request $request)
+    {
+        return view('forgotpassword');
+    }
+
+
+
+    public function forgot_password(Request $request)
+    {
+        $users = $this->getDecrptedUsers();
+        if ($users != null) {
+            $user = $users->where('email', $request['email'])
+                ->first();
+            if ($user != null) {
+                $token = $this->sendForgotPasswordEmail($request['email']);
+                $userDB = User::where('email', $user->encryptedEmail)->first();
+                $userDB->token = $token;
+                $userDB->save();
+                toast('Please check your email for Verification', 'info');
+                return redirect('/login');
+            }
+        }
+        toast('E-mail is Invalid', 'info');
+        return redirect('/register');
+    }
+
+
+    public function emailconfirm(Request $request)
+    {
+        return view('emailconfirm');
+    }
+
+    public function email_confirm(Request $request)
+    {
+        $users = $this->getDecrptedUsers();
+        if ($users != null) {
+            $user = $users->where('email', $request['email'])
+                ->first();
+            if ($user != null) {
+                $token = $this->sendEmail($request['email']);
+                $userDB = User::where('email', $user->encryptedEmail)->first();
+                $userDB->token = $token;
+                $userDB->save();
+                toast('Please check your email for Verification', 'info');
+                return redirect('/login');
+            }
+        }
+        toast('E-mail is Invalid', 'info');
+        return redirect('/register');
     }
 
     // Register
@@ -275,14 +334,6 @@ class UsersController extends Controller
 
     public function sendEmail($email)
     {
-        // $min = 100;
-        // $max = 999;
-
-        // $partA = rand($min, $max);
-        // $partB = rand($min, $max);
-        // $token = $partA . "-" . $partB;
-
-
         // Generate confirmation link
         $token = Str::random(64); // Generate a random token
         $confirmationLink = route('confirm', ['token' => $token]); // Generate the confirmation link using a named route
@@ -290,9 +341,48 @@ class UsersController extends Controller
         Mail::to($email)->send(new VerificationMail($confirmationLink));
         return $token;
     }
-    // $a=array("Volvo"=>"XC90","BMW"=>"X5","Toyota"=>"Highlander");
-    // print_r(array_keys($a));
-    // 
+
+    public function sendForgotPasswordEmail($email)
+    {
+        // Generate confirmation link
+        $token = Str::random(64); // Generate a random token
+        $confirmationLink = route('passwordReset', ['token' => $token]); // Generate the confirmation link using a named route
+
+        Mail::to($email)->send(new ForgotPassword($confirmationLink));
+        return $token;
+    }
+
+    public function passwordReset($token)
+    {
+        $user = User::where('token', $token)->first();
+        if ($user != null) {
+            $email = $this->aEService->decrypt($user->email);
+            return view('passwordReset', compact('email'));
+        }
+        return redirect('/');
+    }
+
+    public function updatePassword(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $users = $this->getDecrptedUsers();
+        $user = $users->where('email', $validatedData['email'])->first();
+        if ($user != null) {
+            $userFromDb = User::find($user->id);
+            $userFromDb->password = Hash::make($validatedData['password']);
+            $userFromDb->save();
+            toast('Password Updated Successfully', 'success');
+            return redirect('/login');
+        }
+        toast('Something went wrong', 'alert');
+        return redirect('/');
+    }
+
 
     public function confirmEmail($token)
     {

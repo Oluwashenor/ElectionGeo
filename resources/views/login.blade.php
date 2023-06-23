@@ -22,21 +22,24 @@ $title = "Login";
                     <input type="text" class="form-control rounded-left" name="email" placeholder="E-Mail" required>
                 </div>
                 <div class="form-group d-flex">
-                    <input type="password" class="form-control rounded-left" name="password" placeholder="Password" required>
+                    <input type="password" class="form-control rounded-left" name="password" placeholder="Password"
+                        required>
                 </div>
                 <div class="form-group d-md-flex">
                     <div class="w-50">
-                        <label class="checkbox-wrap checkbox-primary">Remember Me
-                            <input type="checkbox" checked>
-                            <span class="checkmark"></span>
-                        </label>
+                        <div class="w-50 text-md-right">
+
+                        </div>
                     </div>
                     <div class="w-50 text-md-right">
-                        <a href="#">Forgot Password</a>
+                        <a href="/forgotpassword">Forgot Password</a>
                     </div>
                 </div>
                 <div class="w-50 text-md-centre">
                     <a href="/register">New User ?</a>
+                </div>
+                <div class="w-50 text-md-centre">
+                    <a href="/emailconfirm">Email Confirmation</a>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Sign-In</button>

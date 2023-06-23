@@ -20,14 +20,20 @@ Route::post('/update-map', [ElectionController::class, 'updateMap'])->middleware
 Route::get('/elections', [ElectionController::class, 'index'])->middleware('auth');
 
 
-Route::get('/ninserver', [NinServerController::class, 'index']); //->middleware('auth');
-Route::post('/create-nin-record', [NinServerController::class, 'create']); //->middleware('auth');
+Route::get('/ninserver', [NinServerController::class, 'index'])->middleware('auth');
+Route::get('/emailconfirm', [UsersController::class, 'emailconfirm']);
+Route::post('/email_confirm', [UsersController::class, 'email_confirm']);
+Route::get('/forgotpassword', [UsersController::class, 'forgotpassword']);
+Route::post('/forgot_password', [UsersController::class, 'forgot_password']);
+Route::post('/create-nin-record', [NinServerController::class, 'create'])->middleware('auth');
 
 Route::get('/manage-election/{id}', [ElectionController::class, 'manage'])->middleware('auth');
 Route::get('/delete-election/{id}', [ElectionController::class, 'delete'])->middleware('auth');
 Route::get('/election-result/{id}', [ElectionController::class, 'result'])->middleware('auth');
 
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirm');
+Route::get('/passwordReset/{token}', [UsersController::class, 'passwordReset'])->name('passwordReset');
+Route::post('/updatePassword', [UsersController::class, 'updatePassword'])->name('updatePassword');
 
 Route::get('/voting', [VoteController::class, 'index'])->middleware('auth');
 Route::post('/submit-vote', [VoteController::class, 'create'])->middleware('auth');

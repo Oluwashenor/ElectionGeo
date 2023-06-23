@@ -7,53 +7,54 @@ $appName = "NIN Server";
 
 <head>
     <title>{{$appName}}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
 
     <style>
-        body {
-            font-family: "ui-sans-serif", sans-serif;
-            background-color: #F3F4F6;
-        }
+    body {
+        font-family: "ui-sans-serif", sans-serif;
+        background-color: #F3F4F6;
+    }
 
-        .nav-item {
-            margin: 0 6px;
-        }
+    .nav-item {
+        margin: 0 6px;
+    }
 
-        .titleLayer {
-            padding-top: 9px;
-            height: calc(2 * 64px);
-            background-color: white;
-        }
+    .titleLayer {
+        padding-top: 9px;
+        height: calc(2 * 64px);
+        background-color: white;
+    }
 
-        .myNav {
-            background-color: white;
-            border-bottom: 0.5px solid #cccccc;
-        }
+    .myNav {
+        background-color: white;
+        border-bottom: 0.5px solid #cccccc;
+    }
 
-        .titleHeader {
-            font-size: 140%;
-            text-align: left;
-            margin-top: 20px;
-            margin-left: 15px;
-            font-weight: bold;
-        }
+    .titleHeader {
+        font-size: 140%;
+        text-align: left;
+        margin-top: 20px;
+        margin-left: 15px;
+        font-weight: bold;
+    }
 
-        .content {
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            min-height: 100px;
-            margin-top: 4%;
-            background-color: white;
-            border-radius: 10px;
-            padding-top: 20px;
+    .content {
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        min-height: 100px;
+        margin-top: 4%;
+        background-color: white;
+        border-radius: 10px;
+        padding-top: 20px;
 
-        }
+    }
 
-        .btn-primary {
-            background: #8d448b !important;
-            border: 1px solid #8d448b !important;
-            color: #fff !important;
-        }
+    .btn-primary {
+        background: #8d448b !important;
+        border: 1px solid #8d448b !important;
+        color: #fff !important;
+    }
     </style>
 </head>
 
@@ -63,7 +64,9 @@ $appName = "NIN Server";
         <nav class="navbar navbar-expand-lg myNav">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">{{$appName}}</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 @auth
@@ -72,7 +75,8 @@ $appName = "NIN Server";
                     <div class="d-flex" role="search">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li style="float: right;" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                     {{ Session::get('name')}}
                                 </a>
 
@@ -97,7 +101,8 @@ $appName = "NIN Server";
                     <div class="d-flex" role="search">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li style="float: right;" class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                     {{ Session::get('email') ?? "Admin"}}
                                 </a>
 
@@ -121,12 +126,14 @@ $appName = "NIN Server";
     <div class="container content">
         <!-- Button trigger modal -->
 
-        <button style="margin-bottom: 25px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button style="margin-bottom: 25px;" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop">
             Add New User
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -188,7 +195,9 @@ $appName = "NIN Server";
                         <td>{{$record->lastname}}</td>
                         <td>{{$record->nin}}</td>
                         <td>
-                            <a href="/manage-election/{{$record->id}}" style="margin:0 5px;" class="btn btn-primary">Manage</a><a href="/delete-election/{{$record->id}}" class="btn btn-danger">Delete</a>
+                            <a href="/manage-election/{{$record->id}}" style="margin:0 5px;"
+                                class="btn btn-primary">Manage</a><a href="/delete-election/{{$record->id}}"
+                                class="btn btn-danger">Delete</a>
                         </td>
 
                     </tr>
@@ -209,7 +218,9 @@ $appName = "NIN Server";
     </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js" integrity="sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"
+    integrity="sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @include('sweetalert::alert')
 
